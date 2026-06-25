@@ -300,7 +300,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
 
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const category = button.dataset.category;
+      const category = (button as HTMLElement).dataset.category;
 
       // Update active button
       filterButtons.forEach(btn => {
