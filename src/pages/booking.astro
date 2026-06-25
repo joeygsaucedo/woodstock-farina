@@ -118,7 +118,7 @@ const packages = [
                 </div>
               </div>
 
-              <div class="mt-6">
+              <div class="mt-6 relative">
                 <label for="venue-location" class="block text-wood-700 font-medium mb-2">
                   Venue/Location *
                 </label>
@@ -128,8 +128,19 @@ const packages = [
                   name="venue-location"
                   required
                   placeholder="Venue name and city"
+                  autocomplete="off"
                   class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
                 />
+                <input type="hidden" id="venue-location-id" name="venue-location-id" />
+                <input type="hidden" id="venue-location-label" name="venue-location-label" />
+                <ul
+                  id="venue-suggestions"
+                  class="hidden absolute z-30 mt-1 w-full bg-white border border-wood-200 rounded-lg shadow-lg max-h-56 overflow-auto"
+                  role="listbox"
+                ></ul>
+                <p class="text-xs text-wood-500 mt-2">
+                  Start typing and select a suggested address so we can verify the venue location.
+                </p>
               </div>
 
               <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
@@ -445,12 +456,33 @@ const packages = [
   const submitButton = document.getElementById('submit-booking-btn') as HTMLButtonElement | null;
   const statusBox = document.getElementById('booking-status') as HTMLDivElement | null;
   const statusBoxBottom = document.getElementById('booking-status-bottom') as HTMLDivElement | null;
+  const venueInput = document.getElementById('venue-location') as HTMLInputElement | null;
+  const venueLocationIdInput = document.getElementById('venue-location-id') as HTMLInputElement | null;
+  const venueLocationLabelInput = document.getElementById('venue-location-label') as HTMLInputElement | null;
+  const venueSuggestionList = document.getElementById('venue-suggestions') as HTMLUListElement | null;
 
   const availabilityState = {
     checked: false,
     available: false,
     signature: '',
   };
+
+  const locationState = {
+    selected: false,
+    selectedLabel: '',
+    selectedId: '',
+  };
+
+  let locationQueryTimer: number | undefined;
+
+  interface LocationSuggestion {
+    id: string;
+    label: string;
+    lat: string;
+    lon: string;
+  }
+
+  let activeSuggestions: LocationSuggestion[] = [];
 
   const statusStyles = {
     info: 'bg-wood-100 text-wood-800 border border-wood-200',
@@ -498,6 +530,117 @@ const packages = [
     }
   };
 
+  const hideVenueSuggestions = () => {
+    if (!venueSuggestionList) {
+      return;
+    }
+
+    venueSuggestionList.classList.add('hidden');
+    venueSuggestionList.innerHTML = '';
+  };
+
+  const setVerifiedVenue = (suggestion: LocationSuggestion) => {
+    if (!venueInput || !venueLocationIdInput || !venueLocationLabelInput) {
+      return;
+    }
+
+    venueInput.value = suggestion.label;
+    venueLocationIdInput.value = suggestion.id;
+    venueLocationLabelInput.value = suggestion.label;
+    locationState.selected = true;
+    locationState.selectedLabel = suggestion.label;
+    locationState.selectedId = suggestion.id;
+  };
+
+  const invalidateVenueSelection = () => {
+    locationState.selected = false;
+    locationState.selectedLabel = '';
+    locationState.selectedId = '';
+    if (venueLocationIdInput) {
+      venueLocationIdInput.value = '';
+    }
+    if (venueLocationLabelInput) {
+      venueLocationLabelInput.value = '';
+    }
+  };
+
+  const renderVenueSuggestions = (suggestions: LocationSuggestion[]) => {
+    if (!venueSuggestionList) {
+      return;
+    }
+
+    venueSuggestionList.innerHTML = '';
+
+    if (!suggestions.length) {
+      hideVenueSuggestions();
+      return;
+    }
+
+    suggestions.forEach((suggestion) => {
+      const item = document.createElement('li');
+      item.className = 'px-4 py-3 text-sm text-wood-700 hover:bg-wood-100 cursor-pointer border-b border-wood-100 last:border-b-0';
+      item.textContent = suggestion.label;
+      item.setAttribute('role', 'option');
+
+      item.addEventListener('click', () => {
+        setVerifiedVenue(suggestion);
+        hideVenueSuggestions();
+      });
+
+      venueSuggestionList.appendChild(item);
+    });
+
+    venueSuggestionList.classList.remove('hidden');
+  };
+
+  const fetchVenueSuggestions = async (query: string) => {
+    try {
+      const response = await fetch(`/api/location-suggest?q=${encodeURIComponent(query)}`);
+      const result = await response.json();
+      activeSuggestions = (result.suggestions ?? []) as LocationSuggestion[];
+      renderVenueSuggestions(activeSuggestions);
+    } catch (error) {
+      console.error('Venue suggestions lookup failed:', error);
+      hideVenueSuggestions();
+    }
+  };
+
+  venueInput?.addEventListener('input', () => {
+    const query = venueInput.value.trim();
+
+    if (query !== locationState.selectedLabel) {
+      invalidateVenueSelection();
+    }
+
+    if (availabilityState.checked) {
+      invalidateAvailability();
+      setStatus('Event details changed. Please re-check availability.', 'info');
+    }
+
+    if (locationQueryTimer) {
+      window.clearTimeout(locationQueryTimer);
+    }
+
+    if (query.length < 3) {
+      hideVenueSuggestions();
+      return;
+    }
+
+    locationQueryTimer = window.setTimeout(() => {
+      fetchVenueSuggestions(query);
+    }, 250);
+  });
+
+  venueInput?.addEventListener('blur', () => {
+    window.setTimeout(() => {
+      hideVenueSuggestions();
+
+      if (venueInput.value.trim() && venueInput.value.trim() !== locationState.selectedLabel) {
+        invalidateVenueSelection();
+      }
+    }, 100);
+  });
+
   const watchFields = ['event-date', 'event-time', 'guest-count', 'venue-location'];
   watchFields.forEach((id) => {
     const field = document.getElementById(id);
@@ -514,6 +657,11 @@ const packages = [
 
     if (!payload.eventDate || !payload.eventTime || !payload.guestCount || !payload.venueLocation) {
       setStatus('Add date, time, guest count, and venue before checking availability.', 'error');
+      return;
+    }
+
+    if (!locationState.selected) {
+      setStatus('Select a suggested venue/location so we can verify the address.', 'error');
       return;
     }
 
@@ -560,6 +708,11 @@ const packages = [
       if (submitButton) {
         submitButton.disabled = true;
       }
+      return;
+    }
+
+    if (!locationState.selected) {
+      setStatus('Please select a suggested venue/location before submitting.', 'error');
       return;
     }
 
