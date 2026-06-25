@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
-import { BOOKING_POLICIES } from '../../lib/bookingConfig';
+import { DateTime } from 'luxon';
+import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../../lib/bookingConfig';
 import { checkRangeAvailability } from '../../lib/googleCalendar';
 
 export const prerender = false;
@@ -9,10 +10,6 @@ const badRequest = (message: string, status = 400) => {
     status,
     headers: { 'Content-Type': 'application/json' },
   });
-};
-
-const buildDateTime = (date: string, time: string): Date => {
-  return new Date(`${date}T${time}:00`);
 };
 
 export const POST: APIRoute = async ({ request }) => {
@@ -39,21 +36,21 @@ export const POST: APIRoute = async ({ request }) => {
     return badRequest('Event date and start time are required.');
   }
 
-  const start = buildDateTime(eventDate, eventTime);
-  if (Number.isNaN(start.getTime())) {
+  const localStart = DateTime.fromISO(`${eventDate}T${eventTime}`, {
+    zone: CALENDAR_CONFIG.timezone,
+  });
+  if (!localStart.isValid) {
     return badRequest('Invalid date or time format.');
   }
 
-  const now = new Date();
-  if (start.getTime() <= now.getTime()) {
+  const nowLocal = DateTime.now().setZone(CALENDAR_CONFIG.timezone);
+  if (localStart <= nowLocal) {
     return badRequest('Please choose a future date and time.');
   }
 
-  const earliestDate = new Date();
-  earliestDate.setHours(0, 0, 0, 0);
-  earliestDate.setDate(earliestDate.getDate() + BOOKING_POLICIES.minNoticeDays);
+  const earliestDate = nowLocal.startOf('day').plus({ days: BOOKING_POLICIES.minNoticeDays });
 
-  if (start.getTime() < earliestDate.getTime()) {
+  if (localStart < earliestDate) {
     return new Response(
       JSON.stringify({
         available: false,
@@ -66,7 +63,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  const startHour = start.getHours();
+  const startHour = localStart.hour;
   if (startHour < BOOKING_POLICIES.serviceStartHour || startHour >= BOOKING_POLICIES.serviceEndHour) {
     return new Response(
       JSON.stringify({
@@ -80,9 +77,9 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  const end = new Date(start.getTime() + durationHours * 60 * 60 * 1000);
-  const bufferedStart = new Date(start.getTime() - BOOKING_POLICIES.bufferHours * 60 * 60 * 1000);
-  const bufferedEnd = new Date(end.getTime() + BOOKING_POLICIES.bufferHours * 60 * 60 * 1000);
+  const localEnd = localStart.plus({ hours: durationHours });
+  const bufferedStart = localStart.minus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
+  const bufferedEnd = localEnd.plus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
 
   try {
     const result = await checkRangeAvailability(bufferedStart, bufferedEnd);

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
-import { BOOKING_POLICIES } from '../../lib/bookingConfig';
+import { DateTime } from 'luxon';
+import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../../lib/bookingConfig';
 import { checkRangeAvailability, createBookingEvent } from '../../lib/googleCalendar';
 
 export const prerender = false;
@@ -22,10 +23,6 @@ const requiredFields = [
   'email',
   'phone',
 ] as const;
-
-const buildDateTime = (date: string, time: string): Date => {
-  return new Date(`${date}T${time}:00`);
-};
 
 const generateRequestId = (): string => {
   const stamp = Date.now().toString(36).toUpperCase();
@@ -59,14 +56,21 @@ export const POST: APIRoute = async ({ request }) => {
   const eventTime = String(payload['event-time']);
   const durationHours = Number(payload.durationHours ?? BOOKING_POLICIES.defaultDurationHours);
 
-  const start = buildDateTime(eventDate, eventTime);
-  if (Number.isNaN(start.getTime())) {
+  const localStart = DateTime.fromISO(`${eventDate}T${eventTime}`, {
+    zone: CALENDAR_CONFIG.timezone,
+  });
+  if (!localStart.isValid) {
     return json({ success: false, message: 'Invalid event date or time.' }, 400);
   }
 
-  const end = new Date(start.getTime() + durationHours * 60 * 60 * 1000);
-  const bufferedStart = new Date(start.getTime() - BOOKING_POLICIES.bufferHours * 60 * 60 * 1000);
-  const bufferedEnd = new Date(end.getTime() + BOOKING_POLICIES.bufferHours * 60 * 60 * 1000);
+  const start = localStart.toUTC().toJSDate();
+  const end = localStart.plus({ hours: durationHours }).toUTC().toJSDate();
+
+  const bufferedStart = localStart.minus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
+  const bufferedEnd = localStart
+    .plus({ hours: durationHours + BOOKING_POLICIES.bufferHours })
+    .toUTC()
+    .toJSDate();
 
   try {
     const availability = await checkRangeAvailability(bufferedStart, bufferedEnd);
