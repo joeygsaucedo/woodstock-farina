@@ -6,9 +6,51 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  canonicalPath?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
 }
 
-const { title, description = "Woodstock Farina - Artisanal wood-fired pizza catering in Ventura County. Celebrating Mexican heritage through smoke and fire." } = Astro.props;
+const {
+  title,
+  description = 'Woodstock Farina - Artisanal wood-fired pizza catering in Ventura County. Celebrating Mexican heritage through smoke and fire.',
+  image = '/images/hero/hero-main.jpg',
+  canonicalPath,
+  noindex = false,
+  type = 'website',
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://woodstockfarina.com');
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, siteUrl).toString();
+const socialImageUrl = new URL(image, siteUrl).toString();
+const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Caterer',
+  name: 'Woodstock Farina',
+  description,
+  telephone: '+1-661-754-6510',
+  email: 'Woodstockfarina@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Oxnard',
+    addressRegion: 'CA',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    'Oxnard',
+    'Ventura',
+    'Camarillo',
+    'Thousand Oaks',
+    'Simi Valley',
+    'Ventura County',
+  ],
+  servesCuisine: ['Wood-Fired Pizza', 'Mexican-Inspired Pizza'],
+  sameAs: ['https://instagram.com/woodstock_farina'],
+  url: canonicalUrl,
+};
 ---
 
 <!doctype html>
@@ -17,11 +59,28 @@ const { title, description = "Woodstock Farina - Artisanal wood-fired pizza cate
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robotsContent} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:site_name" content="Woodstock Farina" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <meta name="generator" content={Astro.generator} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
     <title>{title}</title>
   </head>
   <body>

@@ -2,7 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Woodstock Farina - Wood-Fired Pizza Catering | Ventura County">
+<Layout
+  title="Woodstock Farina - Wood-Fired Pizza Catering | Ventura County"
+  description="Woodstock Farina brings artisanal wood-fired pizza catering to weddings, private parties, and corporate events across Ventura County."
+  image="/images/hero/hero-main.jpg"
+>
   <!-- Hero Section -->
   <section class="relative bg-gradient-to-br from-wood-800 via-wood-700 to-wood-900 text-white overflow-hidden">
     <!-- Hero Background Image -->
@@ -203,6 +207,114 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- Recent Events Preview -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          Recent Events
+        </h2>
+        <p class="text-lg text-wood-600">
+          Weddings, private celebrations, and corporate gatherings we have catered across Ventura County
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <article class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/events/wedding-1.jpg"
+            alt="Outdoor wedding event catered by Woodstock Farina"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <div class="text-xs uppercase tracking-wide text-fire-700 font-semibold mb-2">Wedding</div>
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">Ventura Garden Wedding</h3>
+            <p class="text-wood-600">120 guests, live-fire service, and signature menu with late-night pizza slices.</p>
+          </div>
+        </article>
+
+        <article class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/events/corporate-1.jpg"
+            alt="Corporate pizza catering service"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <div class="text-xs uppercase tracking-wide text-fire-700 font-semibold mb-2">Corporate</div>
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">Thousand Oaks Team Event</h3>
+            <p class="text-wood-600">Fast service flow for a company offsite with vegetarian and vegan options.</p>
+          </div>
+        </article>
+
+        <article class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/events/party-1.jpg"
+            alt="Private event pizza catering"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <div class="text-xs uppercase tracking-wide text-fire-700 font-semibold mb-2">Private Party</div>
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">Backyard Celebration</h3>
+            <p class="text-wood-600">A relaxed family party menu featuring Al Pastor and Mexican Street Corn favorites.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/gallery"
+          class="inline-block bg-wood-900 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-800 transition-all transform hover:scale-105"
+        >
+          Explore Full Gallery
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Operating Hours + Service Area -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-4">Operating Hours</h2>
+          <p class="text-wood-600 mb-6">
+            We are a mobile catering service. Events are scheduled by appointment, and we answer booking inquiries during the hours below.
+          </p>
+          <div class="space-y-3 text-wood-700">
+            <div class="flex items-center justify-between border-b border-wood-100 pb-2">
+              <span class="font-medium">Inquiry Support</span>
+              <span>Mon - Sun, 9:00 AM - 7:00 PM</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-wood-100 pb-2">
+              <span class="font-medium">Event Service</span>
+              <span>By confirmed booking</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-medium">Lead Time</span>
+              <span>2-3 weeks recommended</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-4">Primary Service Area</h2>
+          <p class="text-wood-600 mb-6">
+            Based in Oxnard and serving events across Ventura County with optional travel outside the area.
+          </p>
+          <div class="grid grid-cols-2 gap-3 text-wood-700">
+            <div class="bg-wood-50 px-3 py-2 rounded">Oxnard</div>
+            <div class="bg-wood-50 px-3 py-2 rounded">Ventura</div>
+            <div class="bg-wood-50 px-3 py-2 rounded">Camarillo</div>
+            <div class="bg-wood-50 px-3 py-2 rounded">Thousand Oaks</div>
+            <div class="bg-wood-50 px-3 py-2 rounded">Simi Valley</div>
+            <div class="bg-wood-50 px-3 py-2 rounded">Port Hueneme</div>
+          </div>
+          <p class="text-sm text-wood-500 mt-4">Need another location? Ask us for custom travel availability.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Section -->
   <section class="py-20 bg-gradient-to-br from-fire-600 to-fire-700 text-white">
     <div class="container mx-auto px-4 text-center">
@@ -266,6 +378,47 @@ import Layout from '../layouts/Layout.astro';
           </p>
           <div class="font-semibold text-wood-900">— Jessica R.</div>
           <div class="text-sm text-wood-600">Birthday Party</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Preview -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+            Quick Answers Before You Book
+          </h2>
+          <p class="text-lg text-wood-600">
+            Common questions from hosts planning weddings, parties, and company events
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">How far in advance should I reserve?</h3>
+            <p class="text-wood-600">We recommend 2-3 weeks, especially for weekends during peak season.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">Can you accommodate dietary requests?</h3>
+            <p class="text-wood-600">Yes. We offer vegetarian, vegan, and gluten-sensitive options with advance notice.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">What is needed at the venue?</h3>
+            <p class="text-wood-600">A safe setup area and enough room for our mobile wood-fired oven and service line.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">Do you require a deposit?</h3>
+            <p class="text-wood-600">Yes. A 50% deposit secures your date, with remaining balance due on event day.</p>
+          </div>
+        </div>
+
+        <div class="text-center mt-10">
+          <a href="/contact" class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors">
+            View Full FAQ and Contact Details →
+          </a>
         </div>
       </div>
     </div>
