@@ -30,7 +30,7 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['Playfair Display', 'serif'],
+        heading: ['Merriweather', 'serif'],
         body: ['Inter', 'sans-serif'],
       },
     },
