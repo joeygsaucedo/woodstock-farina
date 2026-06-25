@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "**/*.astro": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
