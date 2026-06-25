@@ -1,0 +1,447 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const packages = [
+  {
+    name: "Small Gathering",
+    servings: "Up to 30 guests",
+    basePrice: "Starting at $800"
+  },
+  {
+    name: "Medium Event",
+    servings: "30-75 guests",
+    basePrice: "Starting at $1,500"
+  },
+  {
+    name: "Large Celebration",
+    servings: "75-150 guests",
+    basePrice: "Starting at $2,500"
+  },
+  {
+    name: "Custom Package",
+    servings: "150+ guests",
+    basePrice: "Contact for quote"
+  }
+];
+---
+
+<Layout
+  title="Book Your Event - Woodstock Farina | Check Availability"
+  description="Book authentic wood-fired pizza catering for your event in Ventura County. Check availability and reserve your date today."
+>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-heading font-bold mb-4">
+        Book Your Event
+      </h1>
+      <p class="text-xl text-wood-100 max-w-2xl mx-auto">
+        Let's make your celebration unforgettable with authentic wood-fired pizza
+      </p>
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-wood-50 p-8 md:p-12 rounded-lg shadow-xl">
+          <form class="space-y-8" id="booking-form">
+            <!-- Event Information -->
+            <div>
+              <h2 class="text-2xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+                Event Information
+              </h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="event-date" class="block text-wood-700 font-medium mb-2">
+                    Event Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="event-date"
+                    name="event-date"
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label for="event-time" class="block text-wood-700 font-medium mb-2">
+                    Start Time *
+                  </label>
+                  <input
+                    type="time"
+                    id="event-time"
+                    name="event-time"
+                    required
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label for="event-type" class="block text-wood-700 font-medium mb-2">
+                    Event Type *
+                  </label>
+                  <select
+                    id="event-type"
+                    name="event-type"
+                    required
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  >
+                    <option value="">Select event type</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="corporate">Corporate Event</option>
+                    <option value="birthday">Birthday Party</option>
+                    <option value="anniversary">Anniversary</option>
+                    <option value="graduation">Graduation</option>
+                    <option value="fundraiser">Fundraiser/Nonprofit</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="guest-count" class="block text-wood-700 font-medium mb-2">
+                    Number of Guests *
+                  </label>
+                  <input
+                    type="number"
+                    id="guest-count"
+                    name="guest-count"
+                    required
+                    min="20"
+                    placeholder="e.g., 75"
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <label for="venue-location" class="block text-wood-700 font-medium mb-2">
+                  Venue/Location *
+                </label>
+                <input
+                  type="text"
+                  id="venue-location"
+                  name="venue-location"
+                  required
+                  placeholder="Venue name and city"
+                  class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <!-- Package Selection -->
+            <div>
+              <h2 class="text-2xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+                Select Package
+              </h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {packages.map((pkg) => (
+                  <label class="relative cursor-pointer">
+                    <input
+                      type="radio"
+                      name="package"
+                      value={pkg.name}
+                      required
+                      class="peer sr-only"
+                    />
+                    <div class="bg-white p-6 rounded-lg border-2 border-wood-300 peer-checked:border-fire-600 peer-checked:bg-fire-50 transition-all hover:border-fire-400">
+                      <div class="flex items-start justify-between mb-2">
+                        <h3 class="font-heading font-bold text-lg text-wood-900">
+                          {pkg.name}
+                        </h3>
+                        <div class="w-5 h-5 rounded-full border-2 border-wood-300 peer-checked:border-fire-600 peer-checked:bg-fire-600 flex items-center justify-center">
+                          <svg class="w-3 h-3 text-white hidden peer-checked:block" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="text-fire-600 font-semibold mb-2">{pkg.servings}</div>
+                      <div class="text-wood-600">{pkg.basePrice}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <p class="text-sm text-wood-600 mt-4">
+                <strong>Note:</strong> Final pricing will be provided in your quote based on guest count,
+                package selection, and any special requests.
+              </p>
+            </div>
+
+            <!-- Contact Information -->
+            <div>
+              <h2 class="text-2xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+                Your Information
+              </h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="full-name" class="block text-wood-700 font-medium mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="full-name"
+                    name="full-name"
+                    required
+                    placeholder="John Doe"
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label for="email" class="block text-wood-700 font-medium mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="your@email.com"
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label for="phone" class="block text-wood-700 font-medium mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    placeholder="(555) 123-4567"
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label for="preferred-contact" class="block text-wood-700 font-medium mb-2">
+                    Preferred Contact Method
+                  </label>
+                  <select
+                    id="preferred-contact"
+                    name="preferred-contact"
+                    class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                  >
+                    <option value="email">Email</option>
+                    <option value="phone">Phone Call</option>
+                    <option value="text">Text Message</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Special Requests -->
+            <div>
+              <h2 class="text-2xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+                Special Requests
+              </h2>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="dietary-vegetarian"
+                      class="mt-1 w-5 h-5 text-fire-600 border-wood-300 rounded focus:ring-2 focus:ring-fire-600"
+                    />
+                    <div>
+                      <div class="font-medium text-wood-900">Vegetarian Options Needed</div>
+                      <div class="text-sm text-wood-600">We'll include vegetarian pizza options</div>
+                    </div>
+                  </label>
+                </div>
+
+                <div>
+                  <label class="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="dietary-vegan"
+                      class="mt-1 w-5 h-5 text-fire-600 border-wood-300 rounded focus:ring-2 focus:ring-fire-600"
+                    />
+                    <div>
+                      <div class="font-medium text-wood-900">Vegan Options Needed</div>
+                      <div class="text-sm text-wood-600">We'll use plant-based cheese and toppings</div>
+                    </div>
+                  </label>
+                </div>
+
+                <div>
+                  <label class="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="dietary-gluten-free"
+                      class="mt-1 w-5 h-5 text-fire-600 border-wood-300 rounded focus:ring-2 focus:ring-fire-600"
+                    />
+                    <div>
+                      <div class="font-medium text-wood-900">Gluten-Free Crust Available</div>
+                      <div class="text-sm text-wood-600">Limited availability, please specify quantity</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <label for="additional-notes" class="block text-wood-700 font-medium mb-2">
+                  Additional Notes or Requests
+                </label>
+                <textarea
+                  id="additional-notes"
+                  name="additional-notes"
+                  rows="4"
+                  placeholder="Tell us about any allergies, specific pizza requests, setup requirements, or other details we should know..."
+                  class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent resize-none"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4">
+              <button
+                type="submit"
+                class="w-full bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105 shadow-lg"
+              >
+                Submit Booking Request
+              </button>
+
+              <p class="text-sm text-wood-600 mt-4 text-center">
+                By submitting this form, you'll receive a quote and confirmation within 24 hours.
+                We'll reach out to discuss details and secure your date with a deposit.
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-heading font-bold text-wood-900 mb-4">
+            How It Works
+          </h2>
+          <p class="text-lg text-wood-600">
+            Simple steps from booking to your event
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-fire-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              1
+            </div>
+            <h3 class="font-heading font-bold text-wood-900 mb-2">Submit Request</h3>
+            <p class="text-wood-600 text-sm">
+              Fill out the booking form with your event details
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-16 h-16 bg-fire-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              2
+            </div>
+            <h3 class="font-heading font-bold text-wood-900 mb-2">Get Quote</h3>
+            <p class="text-wood-600 text-sm">
+              Receive a custom quote within 24 hours
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-16 h-16 bg-fire-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              3
+            </div>
+            <h3 class="font-heading font-bold text-wood-900 mb-2">Secure Date</h3>
+            <p class="text-wood-600 text-sm">
+              Pay 50% deposit to confirm your booking
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-16 h-16 bg-fire-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              4
+            </div>
+            <h3 class="font-heading font-bold text-wood-900 mb-2">Enjoy!</h3>
+            <p class="text-wood-600 text-sm">
+              We handle everything on your event day
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Contact -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-heading font-bold text-wood-900 mb-4">
+          Prefer to Talk First?
+        </h2>
+        <p class="text-lg text-wood-600 mb-6">
+          Have questions or want to discuss your event before booking?
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="tel:6617546510"
+            class="bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
+          >
+            Call (661) 754-6510
+          </a>
+          <a
+            href="/contact"
+            class="bg-white border-2 border-fire-600 text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-50 transition-all transform hover:scale-105"
+          >
+            Send Message
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Form handling
+  const form = document.getElementById('booking-form');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Get form data
+    const formData = new FormData(form as HTMLFormElement);
+    const data = Object.fromEntries(formData);
+
+    // Log data (in production, this would be sent to your API/Google Calendar)
+    console.log('Booking submitted:', data);
+
+    // Show success message
+    alert('Thank you for your booking request! We\'ll get back to you within 24 hours with a quote and to confirm availability.');
+
+    // In production, you would:
+    // 1. Send to your backend API (e.g., /api/booking.ts)
+    // 2. Create Google Calendar event
+    // 3. Send confirmation email
+    // 4. Redirect to confirmation page
+
+    // Reset form
+    (form as HTMLFormElement).reset();
+  });
+
+  // Set minimum date to tomorrow
+  const dateInput = document.getElementById('event-date') as HTMLInputElement;
+  if (dateInput) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+  }
+</script>

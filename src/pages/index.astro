@@ -1,0 +1,273 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Woodstock Farina - Wood-Fired Pizza Catering | Ventura County">
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-wood-800 via-wood-700 to-wood-900 text-white overflow-hidden">
+    <!-- Hero Background Image -->
+    <img
+      src="/images/hero/hero-main.jpg"
+      alt="Wood-fired pizza oven"
+      class="absolute inset-0 w-full h-full object-cover opacity-40"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
+
+    <div class="relative container mx-auto px-4 py-32 md:py-48">
+      <div class="max-w-3xl">
+        <h1 class="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight drop-shadow-lg">
+          Artisanal Wood-Fired Pizza Catering
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-wood-100 drop-shadow-md">
+          Celebrating the art of cooking with smoke—a tradition deeply rooted in our Mexican heritage
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            href="/booking"
+            class="bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105 text-center shadow-lg"
+          >
+            Book Your Event
+          </a>
+          <a
+            href="/menu"
+            class="bg-white text-wood-800 px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-50 transition-all transform hover:scale-105 text-center shadow-lg"
+          >
+            View Menu
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-12 bg-white border-b">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <div class="text-4xl font-heading font-bold text-fire-600 mb-2">5+</div>
+          <div class="text-wood-600">Years Experience</div>
+        </div>
+        <div>
+          <div class="text-4xl font-heading font-bold text-fire-600 mb-2">500+</div>
+          <div class="text-wood-600">Events Catered</div>
+        </div>
+        <div>
+          <div class="text-4xl font-heading font-bold text-fire-600 mb-2">100%</div>
+          <div class="text-wood-600">Wood-Fired</div>
+        </div>
+        <div>
+          <div class="text-4xl font-heading font-bold text-fire-600 mb-2">#1</div>
+          <div class="text-wood-600">In Ventura County</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Preview -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-6">
+          Our Story
+        </h2>
+        <p class="text-lg text-wood-700 mb-8 leading-relaxed">
+          At Woodstock Farina, we blend traditional Mexican cooking techniques with artisanal pizza-making.
+          Founded by Victor Melchor, our mobile catering brings authentic wood-fired flavors to your special events
+          across Ventura County. Every pizza is crafted with passion, cooked over real wood fire, and served
+          with the warmth of our heritage.
+        </p>
+        <a
+          href="/about"
+          class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors"
+        >
+          Learn More About Us →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Menu Preview -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          Featured Pizzas
+        </h2>
+        <p class="text-lg text-wood-600">
+          Authentic wood-fired pizzas with a Mexican twist
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- Pizza 1 -->
+        <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/pizzas/margherita.jpg"
+            alt="Margherita Clásica pizza"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
+              Margherita Clásica
+            </h3>
+            <p class="text-wood-600 mb-4">
+              San Marzano tomatoes, fresh mozzarella, basil, extra virgin olive oil
+            </p>
+            <div class="text-fire-600 font-semibold">Traditional favorite</div>
+          </div>
+        </div>
+
+        <!-- Pizza 2 -->
+        <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/pizzas/street-corn.jpg"
+            alt="Mexican Street Corn pizza"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
+              Mexican Street Corn
+            </h3>
+            <p class="text-wood-600 mb-4">
+              Roasted corn, cotija cheese, lime crema, chili powder, cilantro
+            </p>
+            <div class="text-fire-600 font-semibold">Customer favorite</div>
+          </div>
+        </div>
+
+        <!-- Pizza 3 -->
+        <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
+          <img
+            src="/images/pizzas/al-pastor.jpg"
+            alt="Al Pastor pizza"
+            class="h-64 w-full object-cover"
+          />
+          <div class="p-6">
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
+              Al Pastor
+            </h3>
+            <p class="text-wood-600 mb-4">
+              Marinated pork, pineapple, onion, cilantro, salsa verde
+            </p>
+            <div class="text-fire-600 font-semibold">Chef's creation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/menu"
+          class="inline-block bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
+        >
+          View Full Menu
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Media Features -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          As Featured In
+        </h2>
+        <p class="text-lg text-wood-600">
+          Recognized by local and regional publications
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-2xl font-bold text-wood-800">805 Living</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-2xl font-bold text-wood-800">VoyageLA</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-2xl font-bold text-wood-800">CANVASREBEL</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow text-center">
+          <div class="text-2xl font-bold text-wood-800">Voiced Podcast</div>
+        </div>
+      </div>
+
+      <div class="text-center mt-8">
+        <a
+          href="/about"
+          class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors"
+        >
+          Read Victor's Story →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-br from-fire-600 to-fire-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+        Ready to Book Your Event?
+      </h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">
+        Whether it's a wedding, corporate event, or private party, we'll bring authentic
+        wood-fired pizza to make your celebration unforgettable.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/booking"
+          class="bg-white text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-50 transition-all transform hover:scale-105"
+        >
+          Check Availability
+        </a>
+        <a
+          href="tel:6617546510"
+          class="bg-fire-800 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-900 transition-all transform hover:scale-105"
+        >
+          Call (661) 754-6510
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Preview -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          What Our Clients Say
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="bg-wood-50 p-6 rounded-lg shadow">
+          <div class="text-fire-600 mb-4">★★★★★</div>
+          <p class="text-wood-700 mb-4">
+            "The pizza was absolutely incredible! Victor and his team made our wedding reception perfect.
+            Highly recommend!"
+          </p>
+          <div class="font-semibold text-wood-900">— Sarah M.</div>
+          <div class="text-sm text-wood-600">Wedding in Ventura</div>
+        </div>
+
+        <div class="bg-wood-50 p-6 rounded-lg shadow">
+          <div class="text-fire-600 mb-4">★★★★★</div>
+          <p class="text-wood-700 mb-4">
+            "Professional, delicious, and authentic. Our corporate event was a huge success thanks to Woodstock Farina!"
+          </p>
+          <div class="font-semibold text-wood-900">— Michael T.</div>
+          <div class="text-sm text-wood-600">Corporate Event</div>
+        </div>
+
+        <div class="bg-wood-50 p-6 rounded-lg shadow">
+          <div class="text-fire-600 mb-4">★★★★★</div>
+          <p class="text-wood-700 mb-4">
+            "The best wood-fired pizza in Ventura County. The Mexican-inspired flavors are unique and amazing!"
+          </p>
+          <div class="font-semibold text-wood-900">— Jessica R.</div>
+          <div class="text-sm text-wood-600">Birthday Party</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

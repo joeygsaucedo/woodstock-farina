@@ -1,0 +1,331 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const pizzas = [
+  {
+    name: "Margherita Clásica",
+    description: "San Marzano tomatoes, fresh mozzarella, basil, extra virgin olive oil",
+    category: "Traditional",
+    vegetarian: true
+  },
+  {
+    name: "Pepperoni",
+    description: "House tomato sauce, mozzarella, premium pepperoni",
+    category: "Traditional"
+  },
+  {
+    name: "Mexican Street Corn",
+    description: "Roasted corn, cotija cheese, lime crema, chili powder, cilantro",
+    category: "Signature",
+    vegetarian: true
+  },
+  {
+    name: "Al Pastor",
+    description: "Marinated pork, pineapple, onion, cilantro, salsa verde",
+    category: "Signature"
+  },
+  {
+    name: "Carnitas",
+    description: "Slow-cooked pork, pickled onions, jalapeños, cilantro, crema",
+    category: "Signature"
+  },
+  {
+    name: "Chorizo & Potato",
+    description: "Mexican chorizo, roasted potatoes, queso fresco, cilantro",
+    category: "Signature"
+  },
+  {
+    name: "Veggie Supreme",
+    description: "Bell peppers, mushrooms, onions, olives, tomatoes, mozzarella",
+    category: "Traditional",
+    vegetarian: true
+  },
+  {
+    name: "BBQ Chicken",
+    description: "Grilled chicken, BBQ sauce, red onions, cilantro, mozzarella",
+    category: "Traditional"
+  },
+  {
+    name: "Jalapeño Popper",
+    description: "Cream cheese, jalapeños, bacon, mozzarella, ranch drizzle",
+    category: "Specialty"
+  },
+  {
+    name: "Hawaiian",
+    description: "Ham, pineapple, mozzarella, tomato sauce",
+    category: "Traditional"
+  }
+];
+
+const packages = [
+  {
+    name: "Small Gathering",
+    servings: "Up to 30 guests",
+    description: "Perfect for intimate celebrations and small parties",
+    features: [
+      "2-hour service",
+      "Choice of 3 pizza varieties",
+      "Setup and cleanup included",
+      "Professional wood-fired oven"
+    ]
+  },
+  {
+    name: "Medium Event",
+    servings: "30-75 guests",
+    description: "Ideal for corporate events and medium-sized celebrations",
+    features: [
+      "3-hour service",
+      "Choice of 5 pizza varieties",
+      "Setup and cleanup included",
+      "Professional wood-fired oven",
+      "Appetizer options available"
+    ]
+  },
+  {
+    name: "Large Celebration",
+    servings: "75-150 guests",
+    description: "Perfect for weddings and large gatherings",
+    features: [
+      "4-hour service",
+      "Unlimited pizza varieties",
+      "Setup and cleanup included",
+      "Professional wood-fired oven",
+      "Appetizers and desserts available",
+      "Dedicated service staff"
+    ]
+  }
+];
+---
+
+<Layout
+  title="Menu - Woodstock Farina | Wood-Fired Pizza"
+  description="Explore our artisanal wood-fired pizzas with traditional and Mexican-inspired flavors. Catering packages available for events of all sizes."
+>
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-heading font-bold mb-4">
+        Our Menu
+      </h1>
+      <p class="text-xl text-wood-100 max-w-2xl mx-auto">
+        Every pizza is hand-crafted and cooked to perfection in our wood-fired oven
+      </p>
+    </div>
+  </section>
+
+  <!-- Pizza Menu -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <!-- Traditional Pizzas -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
+            Traditional Pizzas
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            {pizzas.filter(p => p.category === 'Traditional').map(pizza => (
+              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-xl font-heading font-bold text-wood-900">
+                    {pizza.name}
+                  </h3>
+                  {pizza.vegetarian && (
+                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      Vegetarian
+                    </span>
+                  )}
+                </div>
+                <p class="text-wood-600">
+                  {pizza.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Signature Pizzas -->
+        <div class="mb-16">
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
+            Signature Pizzas
+          </h2>
+          <p class="text-wood-600 mt-4 mb-8">
+            Inspired by Mexican flavors and traditions
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {pizzas.filter(p => p.category === 'Signature').map(pizza => (
+              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow border-l-4 border-fire-600">
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-xl font-heading font-bold text-wood-900">
+                    {pizza.name}
+                  </h3>
+                  {pizza.vegetarian && (
+                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      Vegetarian
+                    </span>
+                  )}
+                </div>
+                <p class="text-wood-600">
+                  {pizza.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Specialty Pizzas -->
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
+            Specialty Pizzas
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            {pizzas.filter(p => p.category === 'Specialty').map(pizza => (
+              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-xl font-heading font-bold text-wood-900">
+                    {pizza.name}
+                  </h3>
+                  {pizza.vegetarian && (
+                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      Vegetarian
+                    </span>
+                  )}
+                </div>
+                <p class="text-wood-600">
+                  {pizza.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catering Packages -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          Catering Packages
+        </h2>
+        <p class="text-lg text-wood-600 max-w-2xl mx-auto">
+          Choose the package that fits your event. All packages include our professional wood-fired oven and experienced staff.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {packages.map((pkg, index) => (
+          <div class={`bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow ${index === 1 ? 'border-2 border-fire-600 transform md:scale-105' : ''}`}>
+            {index === 1 && (
+              <div class="bg-fire-600 text-white text-sm font-semibold px-4 py-1 rounded-full inline-block mb-4">
+                Most Popular
+              </div>
+            )}
+            <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
+              {pkg.name}
+            </h3>
+            <div class="text-fire-600 font-semibold mb-4">
+              {pkg.servings}
+            </div>
+            <p class="text-wood-600 mb-6">
+              {pkg.description}
+            </p>
+            <ul class="space-y-3 mb-8">
+              {pkg.features.map(feature => (
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-fire-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-wood-700">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/booking"
+              class="block text-center bg-fire-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-fire-700 transition-colors"
+            >
+              Book This Package
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-12">
+        <p class="text-wood-600 mb-4">
+          Need a custom package? We're happy to work with you!
+        </p>
+        <a
+          href="/contact"
+          class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors"
+        >
+          Contact Us for Custom Quotes →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Info -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-wood-50 p-6 rounded-lg">
+          <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">
+            🔥 Wood-Fired Perfection
+          </h3>
+          <p class="text-wood-600">
+            Every pizza is cooked at 800°F in our authentic wood-fired oven, creating the perfect crispy crust
+            and smoky flavor that can't be replicated in a conventional oven.
+          </p>
+        </div>
+
+        <div class="bg-wood-50 p-6 rounded-lg">
+          <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">
+            🌱 Fresh Ingredients
+          </h3>
+          <p class="text-wood-600">
+            We use only the freshest, high-quality ingredients. Our dough is made fresh daily, and we source
+            locally whenever possible to ensure the best taste and support our community.
+          </p>
+        </div>
+
+        <div class="bg-wood-50 p-6 rounded-lg">
+          <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">
+            🎨 Customization Available
+          </h3>
+          <p class="text-wood-600">
+            Have dietary restrictions or special requests? We're happy to accommodate! Let us know about
+            vegetarian, vegan, or gluten-free needs when booking.
+          </p>
+        </div>
+
+        <div class="bg-wood-50 p-6 rounded-lg">
+          <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">
+            📍 Service Area
+          </h3>
+          <p class="text-wood-600">
+            We proudly serve all of Ventura County, including Oxnard, Ventura, Camarillo, Thousand Oaks,
+            and surrounding areas. Contact us about other locations!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gradient-to-br from-fire-600 to-fire-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+        Ready to Book?
+      </h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">
+        Check our availability and reserve your date today!
+      </p>
+      <a
+        href="/booking"
+        class="inline-block bg-white text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-50 transition-all transform hover:scale-105"
+      >
+        Check Availability
+      </a>
+    </div>
+  </section>
+</Layout>

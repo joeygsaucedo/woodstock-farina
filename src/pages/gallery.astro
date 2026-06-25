@@ -1,0 +1,336 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const eventPhotos = [
+  {
+    title: "Elegant Wedding Reception",
+    type: "Wedding",
+    description: "Outdoor wedding with 120 guests in Ventura",
+    image: "/images/events/wedding-1.jpg"
+  },
+  {
+    title: "Corporate Team Building",
+    type: "Corporate",
+    description: "Tech company event in Thousand Oaks",
+    image: "/images/events/corporate-1.jpg"
+  },
+  {
+    title: "Birthday Celebration",
+    type: "Private Party",
+    description: "50th birthday party in Camarillo",
+    image: "/images/events/party-1.jpg"
+  },
+  {
+    title: "Garden Wedding",
+    type: "Wedding",
+    description: "Intimate garden wedding in Oxnard",
+    image: "/images/events/wedding-2.jpg"
+  },
+  {
+    title: "Graduation Party",
+    type: "Private Party",
+    description: "High school graduation celebration",
+    image: "/images/events/party-2.jpg"
+  },
+  {
+    title: "Company Holiday Party",
+    type: "Corporate",
+    description: "Annual holiday celebration for 80 employees",
+    image: "/images/events/corporate-2.jpg"
+  },
+  {
+    title: "Backyard BBQ Wedding",
+    type: "Wedding",
+    description: "Casual backyard wedding in Ventura",
+    image: "/images/events/wedding-3.jpg"
+  },
+  {
+    title: "Nonprofit Fundraiser",
+    type: "Corporate",
+    description: "Community fundraising event",
+    image: "/images/events/corporate-3.jpg"
+  },
+  {
+    title: "Anniversary Party",
+    type: "Private Party",
+    description: "25th wedding anniversary celebration",
+    image: "/images/events/party-3.jpg"
+  },
+  {
+    title: "Beach Wedding",
+    type: "Wedding",
+    description: "Beachside wedding reception in Ventura",
+    image: "/images/events/wedding-4.jpg"
+  },
+  {
+    title: "Product Launch Event",
+    type: "Corporate",
+    description: "Startup product launch party",
+    image: "/images/events/corporate-4.jpg"
+  },
+  {
+    title: "Family Reunion",
+    type: "Private Party",
+    description: "Multi-generational family gathering",
+    image: "/images/events/party-4.jpg"
+  }
+];
+
+const categories = ["All", "Wedding", "Corporate", "Private Party"];
+---
+
+<Layout
+  title="Gallery - Woodstock Farina | Event Photos"
+  description="Browse our gallery of wood-fired pizza catering events across Ventura County. Weddings, corporate events, and private celebrations."
+>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-heading font-bold mb-4">
+        Our Gallery
+      </h1>
+      <p class="text-xl text-wood-100 max-w-2xl mx-auto">
+        Celebrating special moments across Ventura County with authentic wood-fired pizza
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter Buttons -->
+  <section class="py-8 bg-wood-50 border-b sticky top-20 z-40">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap justify-center gap-3">
+        {categories.map(category => (
+          <button
+            class="category-filter px-6 py-2 rounded-full font-semibold transition-all hover:scale-105"
+            data-category={category}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="gallery-grid">
+        {eventPhotos.map(photo => (
+          <div
+            class="gallery-item bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-pointer"
+            data-type={photo.type}
+          >
+            <img
+              src={photo.image}
+              alt={photo.title}
+              class="h-80 w-full object-cover"
+            />
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-xl font-heading font-bold text-wood-900">
+                  {photo.title}
+                </h3>
+                <span class="text-xs bg-fire-100 text-fire-800 px-3 py-1 rounded-full font-semibold">
+                  {photo.type}
+                </span>
+              </div>
+              <p class="text-wood-600">
+                {photo.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Behind the Scenes -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+            Behind the Scenes
+          </h2>
+          <p class="text-lg text-wood-600">
+            A glimpse into how we create magic at every event
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img
+              src="/images/team/oven-setup.jpg"
+              alt="Wood-fired oven setup"
+              class="h-64 w-full object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+                The Oven Setup
+              </h3>
+              <p class="text-wood-600">
+                Our mobile wood-fired oven reaches 800°F, creating the perfect cooking environment for authentic pizza.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img
+              src="/images/team/pizza-making.jpg"
+              alt="Crafting pizza by hand"
+              class="h-64 w-full object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+                Crafting Each Pizza
+              </h3>
+              <p class="text-wood-600">
+                Every pizza is hand-stretched and topped fresh on-site, ensuring the highest quality for your guests.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img
+              src="/images/team/oven-fire.jpg"
+              alt="Pizza cooking in wood fire"
+              class="h-64 w-full object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+                Fresh From the Fire
+              </h3>
+              <p class="text-wood-600">
+                Pizzas cook in just 90 seconds, emerging with the perfect char and smoky flavor that only wood-fire provides.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+            <img
+              src="/images/team/serving.jpg"
+              alt="Serving fresh pizza"
+              class="h-64 w-full object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+                Happy Guests
+              </h3>
+              <p class="text-wood-600">
+                Watching guests enjoy fresh, hot pizza at your event is what makes our work so rewarding.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-heading font-bold text-wood-900 mb-4">
+            By the Numbers
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">500+</div>
+            <div class="text-wood-600 font-medium">Events Catered</div>
+          </div>
+          <div>
+            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">15K+</div>
+            <div class="text-wood-600 font-medium">Pizzas Made</div>
+          </div>
+          <div>
+            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">25K+</div>
+            <div class="text-wood-600 font-medium">Happy Guests</div>
+          </div>
+          <div>
+            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">5+</div>
+            <div class="text-wood-600 font-medium">Years Experience</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-br from-fire-600 to-fire-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-6">
+        Ready to Create Memories?
+      </h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">
+        Let's make your event the next one featured in our gallery!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/booking"
+          class="bg-white text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-50 transition-all transform hover:scale-105"
+        >
+          Book Your Event
+        </a>
+        <a
+          href="/menu"
+          class="bg-fire-800 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-900 transition-all transform hover:scale-105"
+        >
+          View Menu
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Gallery filtering
+  const filterButtons = document.querySelectorAll('.category-filter');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  // Set initial active state
+  filterButtons[0]?.classList.add('bg-fire-600', 'text-white');
+  filterButtons.forEach((btn, idx) => {
+    if (idx !== 0) {
+      btn.classList.add('bg-white', 'text-wood-700', 'hover:bg-wood-100');
+    }
+  });
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.dataset.category;
+
+      // Update active button
+      filterButtons.forEach(btn => {
+        btn.classList.remove('bg-fire-600', 'text-white');
+        btn.classList.add('bg-white', 'text-wood-700', 'hover:bg-wood-100');
+      });
+      button.classList.remove('bg-white', 'text-wood-700', 'hover:bg-wood-100');
+      button.classList.add('bg-fire-600', 'text-white');
+
+      // Filter gallery items
+      galleryItems.forEach(item => {
+        if (category === 'All' || item.dataset.type === category) {
+          item.style.display = 'block';
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1)';
+          }, 10);
+        } else {
+          item.style.opacity = '0';
+          item.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            item.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+
+  // Add transition styles
+  galleryItems.forEach(item => {
+    (item as HTMLElement).style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  });
+</script>

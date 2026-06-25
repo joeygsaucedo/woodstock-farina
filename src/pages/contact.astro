@@ -1,0 +1,404 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+  {
+    question: "How far in advance should I book?",
+    answer: "We recommend booking at least 2-3 weeks in advance, especially for weekends and peak season (May-October). However, we'll do our best to accommodate last-minute requests when possible."
+  },
+  {
+    question: "What's the minimum number of guests?",
+    answer: "Our minimum is typically 30 guests. For smaller gatherings, please contact us to discuss options."
+  },
+  {
+    question: "What areas do you serve?",
+    answer: "We serve all of Ventura County, including Oxnard, Ventura, Camarillo, Thousand Oaks, Simi Valley, and surrounding areas. Contact us about other locations—we may be able to accommodate!"
+  },
+  {
+    question: "Do you offer vegetarian or vegan options?",
+    answer: "Absolutely! We have several vegetarian pizzas, and we can accommodate vegan requests with plant-based cheese and toppings. Just let us know your dietary needs when booking."
+  },
+  {
+    question: "What if it rains on my event day?",
+    answer: "We need covered outdoor space or an indoor area with proper ventilation for the oven. As long as there's adequate shelter, we can operate in light rain. For severe weather, we'll work with you to reschedule."
+  },
+  {
+    question: "Do you require a deposit?",
+    answer: "Yes, we require a 50% deposit to secure your date, with the balance due on the event day. Deposits are refundable up to 7 days before the event."
+  },
+  {
+    question: "How long does setup take?",
+    answer: "We typically arrive 1-2 hours before service to set up the oven and get the fire going. We'll coordinate timing with you to ensure everything is ready when you need it."
+  },
+  {
+    question: "Can you accommodate food allergies?",
+    answer: "Yes! Please inform us of any allergies or dietary restrictions when booking, and we'll make sure to handle your pizzas with care and use separate tools if needed."
+  }
+];
+---
+
+<Layout
+  title="Contact Us - Woodstock Farina | Get In Touch"
+  description="Contact Woodstock Farina for wood-fired pizza catering in Ventura County. Book your event, ask questions, or request a custom quote."
+>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-heading font-bold mb-4">
+        Get In Touch
+      </h1>
+      <p class="text-xl text-wood-100 max-w-2xl mx-auto">
+        Have questions? Ready to book? We'd love to hear from you!
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Form & Info -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Contact Form -->
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-6">
+            Send Us a Message
+          </h2>
+          <form class="space-y-6" id="contact-form">
+            <div>
+              <label for="name" class="block text-wood-700 font-medium mb-2">
+                Name *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                placeholder="Your name"
+              />
+            </div>
+
+            <div>
+              <label for="email" class="block text-wood-700 font-medium mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div>
+              <label for="phone" class="block text-wood-700 font-medium mb-2">
+                Phone
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div>
+              <label for="event-type" class="block text-wood-700 font-medium mb-2">
+                Event Type
+              </label>
+              <select
+                id="event-type"
+                name="event-type"
+                class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent"
+              >
+                <option value="">Select event type</option>
+                <option value="wedding">Wedding</option>
+                <option value="corporate">Corporate Event</option>
+                <option value="birthday">Birthday Party</option>
+                <option value="anniversary">Anniversary</option>
+                <option value="graduation">Graduation</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="message" class="block text-wood-700 font-medium mb-2">
+                Message *
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="5"
+                class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-600 focus:border-transparent resize-none"
+                placeholder="Tell us about your event, number of guests, date, and any special requests..."
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
+            >
+              Send Message
+            </button>
+
+            <p class="text-sm text-wood-600">
+              * Required fields. We'll get back to you within 24 hours!
+            </p>
+          </form>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-6">
+            Contact Information
+          </h2>
+
+          <div class="space-y-6 mb-8">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-fire-100 rounded-full flex items-center justify-center text-fire-600">
+                📞
+              </div>
+              <div>
+                <h3 class="font-semibold text-wood-900 mb-1">Phone</h3>
+                <a href="tel:6617546510" class="text-wood-600 hover:text-fire-600 transition-colors">
+                  (661) 754-6510
+                </a>
+                <p class="text-sm text-wood-500 mt-1">Call or text for quick questions</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-fire-100 rounded-full flex items-center justify-center text-fire-600">
+                ✉️
+              </div>
+              <div>
+                <h3 class="font-semibold text-wood-900 mb-1">Email</h3>
+                <a href="mailto:Woodstockfarina@gmail.com" class="text-wood-600 hover:text-fire-600 transition-colors">
+                  Woodstockfarina@gmail.com
+                </a>
+                <p class="text-sm text-wood-500 mt-1">We respond within 24 hours</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-fire-100 rounded-full flex items-center justify-center text-fire-600">
+                📍
+              </div>
+              <div>
+                <h3 class="font-semibold text-wood-900 mb-1">Location</h3>
+                <p class="text-wood-600">Oxnard, CA</p>
+                <p class="text-sm text-wood-500 mt-1">Serving all of Ventura County</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-fire-100 rounded-full flex items-center justify-center text-fire-600">
+                📱
+              </div>
+              <div>
+                <h3 class="font-semibold text-wood-900 mb-1">Social Media</h3>
+                <a
+                  href="https://instagram.com/woodstock_farina"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-wood-600 hover:text-fire-600 transition-colors"
+                >
+                  @woodstock_farina
+                </a>
+                <p class="text-sm text-wood-500 mt-1">Follow us on Instagram</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Booking Button -->
+          <div class="bg-wood-50 p-6 rounded-lg border-2 border-fire-600">
+            <h3 class="font-heading font-bold text-wood-900 mb-2 text-xl">
+              Ready to Book?
+            </h3>
+            <p class="text-wood-600 mb-4">
+              Skip the form and check our availability calendar to book your event directly!
+            </p>
+            <a
+              href="/booking"
+              class="block text-center bg-fire-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-fire-700 transition-colors"
+            >
+              Check Availability
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Area Map -->
+  <section class="py-20 bg-wood-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-heading font-bold text-wood-900 mb-4">
+          Service Area
+        </h2>
+        <p class="text-lg text-wood-600 mb-8">
+          We proudly serve all of Ventura County and surrounding areas
+        </p>
+
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Oxnard</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Ventura</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Camarillo</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Thousand Oaks</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Simi Valley</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Moorpark</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Port Hueneme</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Santa Paula</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-fire-600">✓</span>
+              <span class="text-wood-700">Fillmore</span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-wood-200">
+            <p class="text-wood-600">
+              <strong>Outside Ventura County?</strong> Contact us! We may be able to accommodate
+              your event for an additional travel fee.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-lg text-wood-600">
+            Find answers to common questions about our catering services
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          {faqs.map((faq, index) => (
+            <div class="bg-wood-50 rounded-lg overflow-hidden">
+              <button
+                class="faq-question w-full text-left px-6 py-5 flex justify-between items-center hover:bg-wood-100 transition-colors"
+                data-faq-index={index}
+              >
+                <span class="font-semibold text-wood-900 pr-8">
+                  {faq.question}
+                </span>
+                <svg
+                  class="faq-icon w-5 h-5 text-fire-600 flex-shrink-0 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              <div
+                class="faq-answer px-6 pb-5 text-wood-600 hidden"
+                data-faq-index={index}
+              >
+                {faq.answer}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-12 text-center bg-wood-50 p-8 rounded-lg">
+          <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+            Still have questions?
+          </h3>
+          <p class="text-wood-600 mb-4">
+            Don't see your question here? Feel free to reach out directly!
+          </p>
+          <a
+            href="tel:6617546510"
+            class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors"
+          >
+            Call Us: (661) 754-6510 →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // FAQ Toggle
+  const faqButtons = document.querySelectorAll('.faq-question');
+
+  faqButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const index = button.dataset.faqIndex;
+      const answer = document.querySelector(`.faq-answer[data-faq-index="${index}"]`);
+      const icon = button.querySelector('.faq-icon');
+
+      // Toggle answer visibility
+      if (answer) {
+        answer.classList.toggle('hidden');
+        icon?.classList.toggle('rotate-180');
+      }
+    });
+  });
+
+  // Contact Form Handling
+  const form = document.getElementById('contact-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Get form data
+    const formData = new FormData(form as HTMLFormElement);
+    const data = Object.fromEntries(formData);
+
+    // In a real implementation, you would send this to your backend/API
+    console.log('Form submitted:', data);
+
+    // Show success message (you can make this nicer with a modal or toast)
+    alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+
+    // Reset form
+    (form as HTMLFormElement).reset();
+  });
+</script>
+
+<style>
+  .faq-icon {
+    transition: transform 0.3s ease;
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+</style>
