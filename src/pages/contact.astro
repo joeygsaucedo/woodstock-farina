@@ -362,7 +362,7 @@ const faqs = [
 
   faqButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const index = button.dataset.faqIndex;
+      const index = (button as HTMLElement).dataset.faqIndex;
       const answer = document.querySelector(`.faq-answer[data-faq-index="${index}"]`);
       const icon = button.querySelector('.faq-icon');
 

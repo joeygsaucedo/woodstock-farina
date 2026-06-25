@@ -312,17 +312,18 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
 
       // Filter gallery items
       galleryItems.forEach(item => {
-        if (category === 'All' || item.dataset.type === category) {
-          item.style.display = 'block';
+        const htmlItem = item as HTMLElement;
+        if (category === 'All' || htmlItem.dataset.type === category) {
+          htmlItem.style.display = 'block';
           setTimeout(() => {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
+            htmlItem.style.opacity = '1';
+            htmlItem.style.transform = 'scale(1)';
           }, 10);
         } else {
-          item.style.opacity = '0';
-          item.style.transform = 'scale(0.9)';
+          htmlItem.style.opacity = '0';
+          htmlItem.style.transform = 'scale(0.9)';
           setTimeout(() => {
-            item.style.display = 'none';
+            htmlItem.style.display = 'none';
           }, 300);
         }
       });
