@@ -13,6 +13,6 @@ export default defineConfig({
   ],
   output: 'hybrid',
   adapter: vercel({
-    functionRuntime: 'nodejs20.x',
+    maxDuration: 30,
   }),
 });
