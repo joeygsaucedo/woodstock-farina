@@ -12,5 +12,7 @@ export default defineConfig({
     }),
   ],
   output: 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    functionRuntime: 'nodejs20.x',
+  }),
 });
