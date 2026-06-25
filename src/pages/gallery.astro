@@ -119,6 +119,12 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
           <div
             class="gallery-item bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-pointer"
             data-type={photo.type}
+            data-image={photo.image}
+            data-title={photo.title}
+            data-description={photo.description}
+            tabindex="0"
+            role="button"
+            aria-label={`Open photo: ${photo.title}`}
           >
             <img
               src={photo.image}
@@ -143,6 +149,56 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
       </div>
     </div>
   </section>
+
+  <div
+    id="gallery-lightbox"
+    class="hidden fixed inset-0 z-[100] bg-black/90 p-4 md:p-8"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Photo viewer"
+  >
+    <button
+      id="lightbox-close"
+      type="button"
+      class="absolute right-4 top-4 md:right-8 md:top-8 text-white/90 hover:text-white text-3xl leading-none"
+      aria-label="Close photo viewer"
+    >
+      &times;
+    </button>
+
+    <button
+      id="lightbox-prev"
+      type="button"
+      class="absolute left-2 top-1/2 -translate-y-1/2 md:left-6 text-white/90 hover:text-white text-4xl px-3 py-2"
+      aria-label="Previous photo"
+    >
+      &#10094;
+    </button>
+
+    <button
+      id="lightbox-next"
+      type="button"
+      class="absolute right-2 top-1/2 -translate-y-1/2 md:right-6 text-white/90 hover:text-white text-4xl px-3 py-2"
+      aria-label="Next photo"
+    >
+      &#10095;
+    </button>
+
+    <div class="mx-auto flex h-full max-w-6xl items-center justify-center">
+      <div class="w-full max-w-5xl" id="lightbox-content">
+        <img
+          id="lightbox-image"
+          src=""
+          alt=""
+          class="max-h-[75vh] w-full rounded-lg object-contain"
+        />
+        <div class="mt-4 text-center text-white">
+          <h3 id="lightbox-title" class="text-2xl font-heading font-bold"></h3>
+          <p id="lightbox-description" class="mt-2 text-white/80"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Behind the Scenes -->
   <section class="py-20 bg-wood-50">
@@ -250,7 +306,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
             <div class="text-wood-600 font-medium">Happy Guests</div>
           </div>
           <div>
-            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">5+</div>
+            <div class="text-5xl font-heading font-bold text-fire-600 mb-2">10</div>
             <div class="text-wood-600 font-medium">Years Experience</div>
           </div>
         </div>
@@ -286,11 +342,75 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
 </Layout>
 
 <script>
-  // Gallery filtering
   const filterButtons = document.querySelectorAll('.category-filter');
-  const galleryItems = document.querySelectorAll('.gallery-item');
+  const galleryItems = Array.from(document.querySelectorAll('.gallery-item')) as HTMLElement[];
 
-  // Set initial active state
+  const lightbox = document.getElementById('gallery-lightbox') as HTMLDivElement | null;
+  const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement | null;
+  const lightboxTitle = document.getElementById('lightbox-title') as HTMLHeadingElement | null;
+  const lightboxDescription = document.getElementById('lightbox-description') as HTMLParagraphElement | null;
+  const lightboxClose = document.getElementById('lightbox-close') as HTMLButtonElement | null;
+  const lightboxPrev = document.getElementById('lightbox-prev') as HTMLButtonElement | null;
+  const lightboxNext = document.getElementById('lightbox-next') as HTMLButtonElement | null;
+  const lightboxContent = document.getElementById('lightbox-content') as HTMLDivElement | null;
+
+  let currentLightboxIndex = -1;
+
+  const getVisibleGalleryItems = () => {
+    const visible = galleryItems.filter((item) => item.style.display !== 'none');
+    return visible.length ? visible : galleryItems;
+  };
+
+  const renderLightbox = (index: number) => {
+    const visibleItems = getVisibleGalleryItems();
+    const boundedIndex = (index + visibleItems.length) % visibleItems.length;
+    const item = visibleItems[boundedIndex];
+
+    if (!item || !lightboxImage || !lightboxTitle || !lightboxDescription) {
+      return;
+    }
+
+    currentLightboxIndex = boundedIndex;
+    lightboxImage.src = item.dataset.image ?? '';
+    lightboxImage.alt = item.dataset.title ?? 'Gallery photo';
+    lightboxTitle.textContent = item.dataset.title ?? '';
+    lightboxDescription.textContent = item.dataset.description ?? '';
+  };
+
+  const openLightboxForItem = (item: HTMLElement) => {
+    const visibleItems = getVisibleGalleryItems();
+    const index = visibleItems.indexOf(item);
+    if (index < 0 || !lightbox) {
+      return;
+    }
+
+    renderLightbox(index);
+    lightbox.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox) {
+      return;
+    }
+
+    lightbox.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    currentLightboxIndex = -1;
+  };
+
+  const showPrev = () => {
+    if (currentLightboxIndex >= 0) {
+      renderLightbox(currentLightboxIndex - 1);
+    }
+  };
+
+  const showNext = () => {
+    if (currentLightboxIndex >= 0) {
+      renderLightbox(currentLightboxIndex + 1);
+    }
+  };
+
   filterButtons[0]?.classList.add('bg-fire-600', 'text-white');
   filterButtons.forEach((btn, idx) => {
     if (idx !== 0) {
@@ -298,40 +418,73 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
     }
   });
 
-  filterButtons.forEach(button => {
+  filterButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const category = (button as HTMLElement).dataset.category;
 
-      // Update active button
-      filterButtons.forEach(btn => {
+      filterButtons.forEach((btn) => {
         btn.classList.remove('bg-fire-600', 'text-white');
         btn.classList.add('bg-white', 'text-wood-700', 'hover:bg-wood-100');
       });
       button.classList.remove('bg-white', 'text-wood-700', 'hover:bg-wood-100');
       button.classList.add('bg-fire-600', 'text-white');
 
-      // Filter gallery items
-      galleryItems.forEach(item => {
-        const htmlItem = item as HTMLElement;
-        if (category === 'All' || htmlItem.dataset.type === category) {
-          htmlItem.style.display = 'block';
+      galleryItems.forEach((item) => {
+        if (category === 'All' || item.dataset.type === category) {
+          item.style.display = 'block';
           setTimeout(() => {
-            htmlItem.style.opacity = '1';
-            htmlItem.style.transform = 'scale(1)';
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1)';
           }, 10);
         } else {
-          htmlItem.style.opacity = '0';
-          htmlItem.style.transform = 'scale(0.9)';
+          item.style.opacity = '0';
+          item.style.transform = 'scale(0.9)';
           setTimeout(() => {
-            htmlItem.style.display = 'none';
+            item.style.display = 'none';
           }, 300);
         }
       });
     });
   });
 
-  // Add transition styles
-  galleryItems.forEach(item => {
-    (item as HTMLElement).style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  galleryItems.forEach((item) => {
+    item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    item.addEventListener('click', () => openLightboxForItem(item));
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openLightboxForItem(item);
+      }
+    });
+  });
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+  lightboxPrev?.addEventListener('click', showPrev);
+  lightboxNext?.addEventListener('click', showNext);
+
+  lightbox?.addEventListener('click', (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  lightboxContent?.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox || lightbox.classList.contains('hidden')) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      closeLightbox();
+    }
+    if (event.key === 'ArrowLeft') {
+      showPrev();
+    }
+    if (event.key === 'ArrowRight') {
+      showNext();
+    }
   });
 </script>

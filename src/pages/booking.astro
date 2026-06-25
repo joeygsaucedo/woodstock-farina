@@ -474,6 +474,9 @@ const packages = [
   };
 
   let locationQueryTimer: number | undefined;
+  let locationLookupAbortController: AbortController | null = null;
+  let locationRequestSequence = 0;
+  let lastAppliedLocationRequest = 0;
 
   interface LocationSuggestion {
     id: string;
@@ -483,6 +486,7 @@ const packages = [
   }
 
   let activeSuggestions: LocationSuggestion[] = [];
+  const suggestionCache = new Map<string, LocationSuggestion[]>();
 
   const statusStyles = {
     info: 'bg-wood-100 text-wood-800 border border-wood-200',
@@ -539,6 +543,19 @@ const packages = [
     venueSuggestionList.innerHTML = '';
   };
 
+  const showVenueSuggestionMessage = (message: string) => {
+    if (!venueSuggestionList) {
+      return;
+    }
+
+    venueSuggestionList.innerHTML = '';
+    const item = document.createElement('li');
+    item.className = 'px-4 py-3 text-sm text-wood-500';
+    item.textContent = message;
+    venueSuggestionList.appendChild(item);
+    venueSuggestionList.classList.remove('hidden');
+  };
+
   const setVerifiedVenue = (suggestion: LocationSuggestion) => {
     if (!venueInput || !venueLocationIdInput || !venueLocationLabelInput) {
       return;
@@ -582,7 +599,8 @@ const packages = [
       item.textContent = suggestion.label;
       item.setAttribute('role', 'option');
 
-      item.addEventListener('click', () => {
+      item.addEventListener('mousedown', (event) => {
+        event.preventDefault();
         setVerifiedVenue(suggestion);
         hideVenueSuggestions();
       });
@@ -594,14 +612,57 @@ const packages = [
   };
 
   const fetchVenueSuggestions = async (query: string) => {
+    const cacheKey = query.toLowerCase();
+    const cachedSuggestions = suggestionCache.get(cacheKey);
+    if (cachedSuggestions) {
+      activeSuggestions = cachedSuggestions;
+      renderVenueSuggestions(activeSuggestions);
+      return;
+    }
+
+    const requestSequence = ++locationRequestSequence;
+
+    if (locationLookupAbortController) {
+      locationLookupAbortController.abort();
+    }
+
+    locationLookupAbortController = new AbortController();
+    showVenueSuggestionMessage('Searching locations...');
+
     try {
-      const response = await fetch(`/api/location-suggest?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`/api/location-suggest?q=${encodeURIComponent(query)}`, {
+        signal: locationLookupAbortController.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Suggestion lookup failed: ${response.status}`);
+      }
+
       const result = await response.json();
+
+      if (requestSequence < lastAppliedLocationRequest) {
+        return;
+      }
+
+      lastAppliedLocationRequest = requestSequence;
       activeSuggestions = (result.suggestions ?? []) as LocationSuggestion[];
+
+      suggestionCache.set(cacheKey, activeSuggestions);
       renderVenueSuggestions(activeSuggestions);
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
       console.error('Venue suggestions lookup failed:', error);
-      hideVenueSuggestions();
+
+      if (requestSequence < lastAppliedLocationRequest) {
+        return;
+      }
+
+      lastAppliedLocationRequest = requestSequence;
+      activeSuggestions = [];
+      showVenueSuggestionMessage('Could not load suggestions. Keep typing or try again in a moment.');
     }
   };
 
@@ -622,6 +683,7 @@ const packages = [
     }
 
     if (query.length < 3) {
+      activeSuggestions = [];
       hideVenueSuggestions();
       return;
     }
@@ -638,7 +700,25 @@ const packages = [
       if (venueInput.value.trim() && venueInput.value.trim() !== locationState.selectedLabel) {
         invalidateVenueSelection();
       }
-    }, 100);
+    }, 150);
+  });
+
+  venueInput?.addEventListener('focus', () => {
+    const query = venueInput.value.trim();
+    if (query.length >= 3 && !locationState.selected) {
+      fetchVenueSuggestions(query);
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!venueSuggestionList || !venueInput) {
+      return;
+    }
+
+    const target = event.target as Node;
+    if (!venueSuggestionList.contains(target) && target !== venueInput) {
+      hideVenueSuggestions();
+    }
   });
 
   const watchFields = ['event-date', 'event-time', 'guest-count', 'venue-location'];
