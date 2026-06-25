@@ -3,97 +3,248 @@ import Layout from '../layouts/Layout.astro';
 
 const pizzas = [
   {
-    name: "Margherita Clásica",
-    description: "San Marzano tomatoes, fresh mozzarella, basil, extra virgin olive oil",
-    category: "Traditional",
-    vegetarian: true
+    name: 'Classic Cheese',
+    description: 'Red sauce, mozzarella, Parmesan, and Pecorino Romano',
+    vegetarian: true,
   },
   {
-    name: "Pepperoni",
-    description: "House tomato sauce, mozzarella, premium pepperoni",
-    category: "Traditional"
+    name: 'Classic Pepperoni',
+    description: 'Red sauce, mozzarella, pepperoni, Parmesan, and Pecorino Romano',
   },
   {
-    name: "Mexican Street Corn",
-    description: "Roasted corn, cotija cheese, lime crema, chili powder, cilantro",
-    category: "Signature",
-    vegetarian: true
+    name: 'Margherita',
+    description: 'Red sauce, fresh mozzarella, fresh basil, oregano, and an olive oil drizzle',
+    vegetarian: true,
   },
   {
-    name: "Al Pastor",
-    description: "Marinated pork, pineapple, onion, cilantro, salsa verde",
-    category: "Signature"
+    name: 'Maestro',
+    description: 'Mozzarella, roasted garlic, mushrooms, Fontina, Parmesan, olive oil, Pecorino Romano, and parsley',
+    vegetarian: true,
   },
   {
-    name: "Carnitas",
-    description: "Slow-cooked pork, pickled onions, jalapeños, cilantro, crema",
-    category: "Signature"
+    name: 'High Life',
+    description: 'Red sauce, mozzarella, basil, pepperoni, sausage, onion, Parmesan, and Pecorino Romano',
   },
   {
-    name: "Chorizo & Potato",
-    description: "Mexican chorizo, roasted potatoes, queso fresco, cilantro",
-    category: "Signature"
+    name: 'Picante *',
+    description: 'Red sauce, red pepper chili flakes, mozzarella, pepperoni, Parmesan, ricotta, basil, Pecorino Romano, hot honey, and house-made chili oil',
+    specialty: true,
   },
   {
-    name: "Veggie Supreme",
-    description: "Bell peppers, mushrooms, onions, olives, tomatoes, mozzarella",
-    category: "Traditional",
-    vegetarian: true
+    name: 'Truffle King *',
+    description: 'Garlic cream sauce, sausage, grilled onion, roasted garlic, mushrooms, Parmesan, truffle oil, Pecorino Romano, and parsley',
+    specialty: true,
   },
   {
-    name: "BBQ Chicken",
-    description: "Grilled chicken, BBQ sauce, red onions, cilantro, mozzarella",
-    category: "Traditional"
+    name: 'Roman Crunch *',
+    description: 'Vodka sauce, pepperoni, fresh basil, crispy breadcrumbs, stracciatella, and Pecorino Romano',
+    specialty: true,
   },
   {
-    name: "Jalapeño Popper",
-    description: "Cream cheese, jalapeños, bacon, mozzarella, ranch drizzle",
-    category: "Specialty"
+    name: 'The Parma *',
+    description: 'Mozzarella, prosciutto, olive oil, fresh arugula, and Pecorino Romano',
+    specialty: true,
   },
   {
-    name: "Hawaiian",
-    description: "Ham, pineapple, mozzarella, tomato sauce",
-    category: "Traditional"
-  }
+    name: 'Garden Vibe *',
+    description: 'Pesto, mozzarella, artichokes, olives, sun dried tomatoes, Parmesan, Pecorino Romano, and parsley',
+    specialty: true,
+    vegetarian: true,
+  },
+  {
+    name: 'Ventura *',
+    description: 'Pesto, mozzarella, artichoke hearts, fresh basil, ricotta, lemon zest, and Pecorino Romano',
+    specialty: true,
+    vegetarian: true,
+  },
+  {
+    name: 'Esquite Corn *',
+    description: 'Roasted corn, mozzarella, olive oil, chipotle aioli, Parmesan, Tajin, cilantro, and a fresh lime wedge',
+    specialty: true,
+    vegetarian: true,
+  },
+  {
+    name: 'On The Vine *',
+    description: 'Vodka sauce, burrata, fresh basil, vine roasted tomatoes, roasted garlic, Pecorino Romano, and a balsamic glaze drizzle',
+    specialty: true,
+    vegetarian: true,
+  },
+  {
+    name: 'The Lasagna *',
+    description: 'Red sauce, oregano, sausage, fresh basil, roasted garlic, grilled onions, mozzarella, ricotta, Parmesan, and Pecorino Romano',
+    specialty: true,
+  },
+];
+
+const salads = [
+  {
+    name: 'Garden Salad',
+    description: 'Mixed greens, microgreens, edible flowers served with house-made buttermilk ranch and Italian dressing',
+  },
+  {
+    name: 'Caesar Salad',
+    description: 'Romaine lettuce, freshly shaved Parmesan, and croutons, tossed with Caesar dressing',
+  },
+  {
+    name: 'Fresh Beet Salad *',
+    description: 'Roasted golden beets, spring mix, goat cheese, golden raisins, pistachios, tossed in olive oil and red wine vinegar',
+    specialty: true,
+  },
+  {
+    name: 'Strawberry Spinach Salad *',
+    description: 'Baby spinach, strawberry halves, walnuts, crumbled feta cheese tossed with balsamic vinegar',
+    specialty: true,
+  },
+  {
+    name: 'Tomato Burrata Salad *',
+    description: 'Baby tomato halves with burrata, diced red onion, fresh basil, parsley, salt, pepper, and chopped garlic, tossed in basil oil and red wine vinegar',
+    specialty: true,
+  },
+  {
+    name: 'Esquite Inspired Street Corn Salad *',
+    description: 'Roasted fire corn, cilantro, diced peppers, red onion, Cotija cheese, queso fresco, green onion, salt, pepper, lime zest, lemon juice, and mayonnaise',
+    specialty: true,
+  },
+  {
+    name: 'Summer Peach Salad *',
+    description: 'Fresh sliced peaches and heirloom tomatoes with fresh basil, tossed with balsamic glaze and basil oil, topped with flaky salt',
+    specialty: true,
+  },
+];
+
+const appetizers = [
+  {
+    name: 'Garlic Bread',
+    description: 'Garlic butter and Parmesan cheese',
+  },
+  {
+    name: 'Wood-fired Meatballs',
+    description: 'Pork and beef meatballs roasted and served over a house-made tomato sauce',
+  },
+  {
+    name: 'Caprese Skewers',
+    description: 'Mozzarella balls, cherry tomatoes, and fresh basil',
+  },
+  {
+    name: 'Bruschetta',
+    description: 'Diced tomatoes with garlic and fresh basil drizzled with balsamic glaze and served over toasted baguette slices',
+  },
+  {
+    name: 'Oven Roasted Wings *',
+    description: 'Seasoned chicken wings finished in our ovens',
+    specialty: true,
+    options: ['Lime Mezcal', 'Lemon Pepper', 'Garlic Herb', 'Naked Wings (No Finishing Sauce)'],
+  },
+  {
+    name: 'Burrata Bruschetta *',
+    description: 'Diced tomatoes, garlic, basil, and olive oil served with fresh burrata on toasted baguette slices',
+    specialty: true,
+  },
+  {
+    name: 'Whipped Ricotta *',
+    description: 'Served with garlic confit and toasted baguette slices',
+    specialty: true,
+  },
+  {
+    name: 'Prosciutto & Melon *',
+    description: 'Prosciutto, cantaloupe, and arugula',
+    specialty: true,
+  },
+  {
+    name: 'Shrimp Scampi Crostini *',
+    description: 'Roasted shrimp in scampi sauce drizzled with chimichurri',
+    specialty: true,
+  },
+  {
+    name: 'Goat Cheese & Honey Crostini *',
+    description: 'Creamy goat cheese, drizzled with honey and walnut halves',
+    specialty: true,
+  },
+  {
+    name: 'Brie & Fig Jam Crostini *',
+    description: 'Soft brie with fig jam and fresh thyme',
+    specialty: true,
+  },
+  {
+    name: 'Gorgonzola & Pear Crostini *',
+    description: 'Gorgonzola cheese and sliced pears drizzled with balsamic glaze',
+    specialty: true,
+  },
+  {
+    name: 'Spinach & Artichoke Crostini *',
+    description: 'Spinach artichoke spread topped with grilled artichoke and grated Pecorino Romano',
+    specialty: true,
+  },
+  {
+    name: 'Stuffed Mushrooms *',
+    description: 'Breadcrumbs, bacon, onion, feta cheese, garlic, and chives',
+    specialty: true,
+  },
+  {
+    name: 'Steak Crostini *',
+    description: 'Sliced steak, sauteed mushrooms, burrata, and chimichurri',
+    specialty: true,
+  },
+  {
+    name: 'Caramelized Onions & Blue Cheese Crostini *',
+    description: 'Topped with chopped chives',
+    specialty: true,
+  },
+  {
+    name: 'Smoked Salmon & Cream Cheese *',
+    description: 'Smoked salmon, cream cheese, capers, and dill',
+    specialty: true,
+  },
 ];
 
 const packages = [
   {
-    name: "Small Gathering",
-    servings: "Up to 30 guests",
-    description: "Perfect for intimate celebrations and small parties",
-    features: [
-      "2-hour service",
-      "Choice of 3 pizza varieties",
-      "Setup and cleanup included",
-      "Professional wood-fired oven"
-    ]
+    name: 'Fire y Fiesta',
+    price: '$48 per person',
+    description: 'A selection of 3 pizzas, 2 appetizers, 2 salads, and a 4 ft grazing table.',
   },
   {
-    name: "Medium Event",
-    servings: "30-75 guests",
-    description: "Ideal for corporate events and medium-sized celebrations",
-    features: [
-      "3-hour service",
-      "Choice of 5 pizza varieties",
-      "Setup and cleanup included",
-      "Professional wood-fired oven",
-      "Appetizer options available"
-    ]
+    name: 'Sabor Social',
+    price: '$35 per person',
+    description: 'A selection of 3 pizzas, 2 appetizers, and 1 salad.',
   },
   {
-    name: "Large Celebration",
-    servings: "75-150 guests",
-    description: "Perfect for weddings and large gatherings",
-    features: [
-      "4-hour service",
-      "Unlimited pizza varieties",
-      "Setup and cleanup included",
-      "Professional wood-fired oven",
-      "Appetizers and desserts available",
-      "Dedicated service staff"
-    ]
-  }
+    name: 'Amigos y Appetites',
+    price: '$30 per person',
+    description: 'A selection of 3 pizzas and 1 salad.',
+  },
+  {
+    name: 'Slices de Sabores',
+    price: '$25 per person',
+    description: 'A selection of 3 pizzas.',
+  },
+];
+
+const grazingLayouts = [
+  {
+    name: 'Flatlay',
+    description: 'Presentations are made directly on a flat surface on food-safe parchment paper.',
+    sizes: ['4 ft: $600 - Serves 25-35', '6 ft: $800 - Serves 40-55', '8 ft: $1000 - Serves 60-75', '10 ft: $1400 - Serves 80-100'],
+  },
+  {
+    name: 'Multi-Dimensional',
+    description: 'Includes various boxes, risers, or stands to create a uniquely visually appealing display.',
+    sizes: ['6 ft: $1000 - Serves 40-55', '8 ft: $1250 - Serves 60-75', '10 ft: $1700 - Serves 80-100', '12 ft: $2100 - Serves 105-120'],
+  },
+];
+
+const grazingIncludes = [
+  '4 hard cheeses',
+  '2 soft cheeses',
+  'Selection of cured meats',
+  'Seasonal fruits and vegetables',
+  '1 craft spread',
+  'Local honey',
+  '4 pickled or marinated items',
+  'Selection of artisanal crackers',
+  '2 nuts',
+  '2 dried fruits',
+  'Fresh greenery and edible flowers',
 ];
 ---
 
@@ -117,23 +268,58 @@ const packages = [
   <section class="py-20 bg-white">
     <div class="container mx-auto px-4">
       <div class="max-w-5xl mx-auto">
-        <!-- Traditional Pizzas -->
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+            Meal Options
+          </h2>
+          <p class="text-lg text-wood-600 max-w-3xl mx-auto">
+            Our meal options are designed to fit weddings, parties, and corporate events of every size.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {packages.map((pkg) => (
+            <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow border-l-4 border-fire-600">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <h3 class="text-2xl font-heading font-bold text-wood-900">{pkg.name}</h3>
+                <div class="text-fire-600 font-semibold">{pkg.price}</div>
+              </div>
+              <p class="text-wood-600">{pkg.description}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="bg-fire-50 border border-fire-100 rounded-lg p-5 mb-16 text-wood-700">
+          <p class="font-medium mb-2">Important pricing note</p>
+          <p>
+            Appetizers, salads, and grazing tables not included in your meal selection are available at an additional per person cost.
+            Specialty menu selections marked with an asterisk incur an additional fee of $300 per event.
+          </p>
+        </div>
+
         <div class="mb-16">
           <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
-            Traditional Pizzas
+            Pizza Selection
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {pizzas.filter(p => p.category === 'Traditional').map(pizza => (
-              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            {pizzas.map((pizza) => (
+              <div class={`bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow ${pizza.specialty ? 'border-l-4 border-fire-600' : ''}`}>
                 <div class="flex justify-between items-start mb-2">
                   <h3 class="text-xl font-heading font-bold text-wood-900">
                     {pizza.name}
                   </h3>
-                  {pizza.vegetarian && (
-                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                      Vegetarian
-                    </span>
-                  )}
+                  <div class="flex gap-2 flex-wrap justify-end">
+                    {pizza.specialty && (
+                      <span class="text-xs bg-fire-100 text-fire-800 px-2 py-1 rounded">
+                        Specialty +$300/event
+                      </span>
+                    )}
+                    {pizza.vegetarian && (
+                      <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        Vegetarian
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <p class="text-wood-600">
                   {pizza.description}
@@ -143,58 +329,104 @@ const packages = [
           </div>
         </div>
 
-        <!-- Signature Pizzas -->
         <div class="mb-16">
           <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
-            Signature Pizzas
+            Salads
           </h2>
           <p class="text-wood-600 mt-4 mb-8">
-            Inspired by Mexican flavors and traditions
+            Standard salad selections are priced at $8 per person. Specialty salad options are marked below.
           </p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {pizzas.filter(p => p.category === 'Signature').map(pizza => (
-              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow border-l-4 border-fire-600">
+            {salads.map((salad) => (
+              <div class={`bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow ${salad.specialty ? 'border-l-4 border-fire-600' : ''}`}>
                 <div class="flex justify-between items-start mb-2">
                   <h3 class="text-xl font-heading font-bold text-wood-900">
-                    {pizza.name}
+                    {salad.name}
                   </h3>
-                  {pizza.vegetarian && (
-                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                      Vegetarian
+                  {salad.specialty && (
+                    <span class="text-xs bg-fire-100 text-fire-800 px-2 py-1 rounded">
+                      Specialty +$300/event
                     </span>
                   )}
                 </div>
                 <p class="text-wood-600">
-                  {pizza.description}
+                  {salad.description}
                 </p>
               </div>
             ))}
           </div>
         </div>
 
-        <!-- Specialty Pizzas -->
-        <div>
+        <div class="mb-16">
           <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
-            Specialty Pizzas
+            Appetizers
           </h2>
+          <p class="text-wood-600 mt-4 mb-8">
+            Appetizers range from $8 to $15 per person depending on your selections.
+          </p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {pizzas.filter(p => p.category === 'Specialty').map(pizza => (
-              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            {appetizers.map((item) => (
+              <div class={`bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow ${item.specialty ? 'border-l-4 border-fire-600' : ''}`}>
                 <div class="flex justify-between items-start mb-2">
                   <h3 class="text-xl font-heading font-bold text-wood-900">
-                    {pizza.name}
+                    {item.name}
                   </h3>
-                  {pizza.vegetarian && (
-                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                      Vegetarian
+                  {item.specialty && (
+                    <span class="text-xs bg-fire-100 text-fire-800 px-2 py-1 rounded">
+                      Specialty +$300/event
                     </span>
                   )}
                 </div>
                 <p class="text-wood-600">
-                  {pizza.description}
+                  {item.description}
                 </p>
+                {item.options && (
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    {item.options.map((option) => (
+                      <li class="text-xs bg-white border border-wood-200 text-wood-700 px-2 py-1 rounded-full">{option}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-2 pb-2 border-b-2 border-fire-600 inline-block">
+            Grazing Table
+          </h2>
+          <p class="text-wood-600 mt-4 mb-8 leading-relaxed">
+            We can arrange a beautiful grazing table for your event full of cured meats, artisanal cheeses, breads and crackers,
+            seasonal fruits and vegetables, pickled items, dried fruit and nuts, dips, honey, and jams.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            {grazingLayouts.map((layout) => (
+              <div class="bg-wood-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">{layout.name}</h3>
+                <p class="text-wood-600 mb-4">{layout.description}</p>
+                <ul class="space-y-2 text-wood-700">
+                  {layout.sizes.map((size) => (
+                    <li>{size}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div class="bg-white border border-wood-200 rounded-lg p-6">
+            <p class="text-wood-700 mb-4">
+              Pricing includes food for the suggested guest count, serving utensils/tongs, and lush greenery.
+              Multi-dimensional layouts include live setup. Clean up service is available for an additional fee of $100-$150,
+              and plates, cutlery, and napkins may be added for $1.50 per person.
+            </p>
+            <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">Standard 6-8 ft table includes</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-wood-700">
+              {grazingIncludes.map((item) => (
+                <div class="bg-wood-50 px-3 py-2 rounded">{item}</div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -206,45 +438,37 @@ const packages = [
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
         <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
-          Catering Packages
+          Why Guests Love It
         </h2>
         <p class="text-lg text-wood-600 max-w-2xl mx-auto">
-          Choose the package that fits your event. All packages include our professional wood-fired oven and experienced staff.
+          Wood-fired service, seasonal ingredients, and flexible menu formats built for memorable events.
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {packages.map((pkg, index) => (
-          <div class={`bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow ${index === 1 ? 'border-2 border-fire-600 transform md:scale-105' : ''}`}>
-            {index === 1 && (
-              <div class="bg-fire-600 text-white text-sm font-semibold px-4 py-1 rounded-full inline-block mb-4">
-                Most Popular
-              </div>
-            )}
+        {[
+          {
+            title: 'Wood-fired service on site',
+            body: 'Every event is cooked live in our oven for the smoky flavor and crisp crust that define Woodstock Farina.',
+          },
+          {
+            title: 'Flexible catering formats',
+            body: 'Build from pizzas only, full meal packages, or add appetizers, salads, and a full grazing table.',
+          },
+          {
+            title: 'Specialty upgrades available',
+            body: 'Seasonal and premium menu selections marked with an asterisk can be added for a flat specialty event fee.',
+          },
+        ].map((feature) => (
+          <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
             <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
-              {pkg.name}
+              {feature.title}
             </h3>
-            <div class="text-fire-600 font-semibold mb-4">
-              {pkg.servings}
-            </div>
             <p class="text-wood-600 mb-6">
-              {pkg.description}
+              {feature.body}
             </p>
-            <ul class="space-y-3 mb-8">
-              {pkg.features.map(feature => (
-                <li class="flex items-start">
-                  <svg class="w-5 h-5 text-fire-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-wood-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <a
-              href="/booking"
-              class="block text-center bg-fire-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-fire-700 transition-colors"
-            >
-              Book This Package
+            <a href="/booking" class="inline-block text-fire-600 font-semibold hover:text-fire-700 transition-colors">
+              Build Your Event Menu →
             </a>
           </div>
         ))}
@@ -252,7 +476,7 @@ const packages = [
 
       <div class="text-center mt-12">
         <p class="text-wood-600 mb-4">
-          Need a custom package? We're happy to work with you!
+          Need a custom package or a grazing table tailored to your guest count? We are happy to work with you.
         </p>
         <a
           href="/contact"
@@ -283,8 +507,7 @@ const packages = [
             🌱 Fresh Ingredients
           </h3>
           <p class="text-wood-600">
-            We use only the freshest, high-quality ingredients. Our dough is made fresh daily, and we source
-            locally whenever possible to ensure the best taste and support our community.
+            We use fresh seasonal produce, quality cheeses, and house-built combinations designed to stand out at catered events.
           </p>
         </div>
 
@@ -293,18 +516,16 @@ const packages = [
             🎨 Customization Available
           </h3>
           <p class="text-wood-600">
-            Have dietary restrictions or special requests? We're happy to accommodate! Let us know about
-            vegetarian, vegan, or gluten-free needs when booking.
+            Have dietary restrictions or special requests? Let us know when booking and we can help shape a menu around your event.
           </p>
         </div>
 
         <div class="bg-wood-50 p-6 rounded-lg">
           <h3 class="text-xl font-heading font-bold text-wood-900 mb-3">
-            📍 Service Area
+            ⭐ Specialty Selection Note
           </h3>
           <p class="text-wood-600">
-            We proudly serve all of Ventura County, including Oxnard, Ventura, Camarillo, Thousand Oaks,
-            and surrounding areas. Contact us about other locations!
+            Menu items marked with an asterisk are specialty selections and add $300 per event when included.
           </p>
         </div>
       </div>
