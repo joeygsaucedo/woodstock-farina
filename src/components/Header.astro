@@ -1,5 +1,6 @@
 ---
 const currentPath = Astro.url.pathname;
+const navLinkBase = 'inline-flex items-center h-full text-wood-700 hover:text-fire-600 font-medium transition-colors border-b-2 border-transparent pb-1';
 ---
 
 <nav class="bg-white shadow-md sticky top-0 z-50">
@@ -16,31 +17,31 @@ const currentPath = Astro.url.pathname;
       <div class="hidden md:flex items-center space-x-8">
         <a
           href="/"
-          class={`text-wood-700 hover:text-fire-600 font-medium transition-colors ${currentPath === '/' ? 'text-fire-600 border-b-2 border-fire-600 pb-1' : ''}`}
+          class={`${navLinkBase} ${currentPath === '/' ? 'text-fire-600 border-fire-600' : ''}`}
         >
           Home
         </a>
         <a
           href="/menu"
-          class={`text-wood-700 hover:text-fire-600 font-medium transition-colors ${currentPath === '/menu' ? 'text-fire-600 border-b-2 border-fire-600 pb-1' : ''}`}
+          class={`${navLinkBase} ${currentPath === '/menu' ? 'text-fire-600 border-fire-600' : ''}`}
         >
           Menu
         </a>
         <a
           href="/about"
-          class={`text-wood-700 hover:text-fire-600 font-medium transition-colors ${currentPath === '/about' ? 'text-fire-600 border-b-2 border-fire-600 pb-1' : ''}`}
+          class={`${navLinkBase} ${currentPath === '/about' ? 'text-fire-600 border-fire-600' : ''}`}
         >
           About
         </a>
         <a
           href="/gallery"
-          class={`text-wood-700 hover:text-fire-600 font-medium transition-colors ${currentPath === '/gallery' ? 'text-fire-600 border-b-2 border-fire-600 pb-1' : ''}`}
+          class={`${navLinkBase} ${currentPath === '/gallery' ? 'text-fire-600 border-fire-600' : ''}`}
         >
           Gallery
         </a>
         <a
           href="/contact"
-          class={`text-wood-700 hover:text-fire-600 font-medium transition-colors ${currentPath === '/contact' ? 'text-fire-600 border-b-2 border-fire-600 pb-1' : ''}`}
+          class={`${navLinkBase} ${currentPath === '/contact' ? 'text-fire-600 border-fire-600' : ''}`}
         >
           Contact
         </a>
