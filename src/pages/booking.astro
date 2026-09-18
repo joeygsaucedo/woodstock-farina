@@ -3,24 +3,24 @@ import Layout from '../layouts/Layout.astro';
 
 const packages = [
   {
-    name: "Small Gathering",
-    servings: "Up to 30 guests",
-    basePrice: "Starting at $800"
+    name: "Fire y Fiesta",
+    price: "$48 per person",
+    includes: "3 pizzas, 2 appetizers, 2 salads, and a 4 ft grazing table"
   },
   {
-    name: "Medium Event",
-    servings: "30-75 guests",
-    basePrice: "Starting at $1,500"
+    name: "Sabor Social",
+    price: "$35 per person",
+    includes: "3 pizzas, 2 appetizers, and 1 salad"
   },
   {
-    name: "Large Celebration",
-    servings: "75-150 guests",
-    basePrice: "Starting at $2,500"
+    name: "Amigos y Appetites",
+    price: "$30 per person",
+    includes: "3 pizzas and 1 salad"
   },
   {
-    name: "Custom Package",
-    servings: "150+ guests",
-    basePrice: "Contact for quote"
+    name: "Slices de Sabores",
+    price: "$25 per person",
+    includes: "3 pizzas, cut and served by the slice"
   }
 ];
 ---
@@ -59,7 +59,7 @@ const packages = [
           <div class="bg-white p-6 rounded-lg shadow">
             <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Required Deposit</div>
             <div class="text-lg font-heading font-bold text-wood-900">$250</div>
-            <p class="text-sm text-wood-600 mt-2">Secures your date. Balance is due on the event day.</p>
+            <p class="text-sm text-wood-600 mt-2">Secures your date. Balance is due at the end of the event.</p>
           </div>
         </div>
       </div>
@@ -216,16 +216,17 @@ const packages = [
                           </svg>
                         </div>
                       </div>
-                      <div class="text-fire-600 font-semibold mb-2">{pkg.servings}</div>
-                      <div class="text-wood-600">{pkg.basePrice}</div>
+                      <div class="text-fire-600 font-semibold mb-2">{pkg.price}</div>
+                      <div class="text-wood-600">{pkg.includes}</div>
                     </div>
                   </label>
                 ))}
               </div>
 
               <p class="text-sm text-wood-600 mt-4">
-                <strong>Note:</strong> Final pricing will be provided in your quote based on guest count,
-                package selection, and any special requests.
+                <strong>Note:</strong> Final pricing will be provided in your quote based on guest count, package
+                selection, and any special requests. Package pricing is quoted before labor, travel outside Ventura
+                County, and a 4% processing fee on credit card payments.
               </p>
             </div>
 
@@ -446,6 +447,57 @@ const packages = [
     </div>
   </section>
 
+
+  <!-- Event & Payment Details -->
+  <section class="py-20 bg-white border-t border-wood-200">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+            Event Details
+          </h2>
+          <ul class="space-y-4 text-wood-600">
+            <li>
+              Our catering team arrives one hour before your event to begin setup. The oven is lit first, and once it
+              reaches our desired temperature the pizzas take only a few minutes each to cook.
+            </li>
+            <li>
+              Every pizza is made on site with our own house-made dough and freshly prepared ingredients. Everything
+              served comes straight from our oven, and we set out your orders as each batch finishes.
+            </li>
+            <li>
+              We need ample space to set up: enough room for our trailer and a 10 x 10 tent. The oven can go anywhere
+              you can park.
+            </li>
+            <li>
+              If a gate sits in the pathway to the setup location, the opening needs a minimum of 96 inches of
+              clearance for the oven to pass through. Evening events also require access to electricity.
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-3xl font-heading font-bold text-wood-900 mb-6 pb-3 border-b-2 border-fire-600">
+            Payment Details
+          </h2>
+          <ul class="space-y-4 text-wood-600">
+            <li>
+              A $250 deposit secures your date. Final payment of the remaining balance is due upon conclusion of the
+              event.
+            </li>
+            <li>
+              We accept cash, checks, and all major credit cards. Credit card transactions carry an additional 4%
+              processing fee.
+            </li>
+            <li>
+              Changes may be made to your order up to 30 days before your event. Changes made less than 30 days prior
+              may incur a fee.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Quick Contact -->
   <section class="py-16 bg-white">
     <div class="container mx-auto px-4">

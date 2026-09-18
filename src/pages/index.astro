@@ -1,5 +1,46 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// Real customer feedback. Lightly cleaned for spelling and punctuation only:
+// no praise has been added and no wording embellished.
+const testimonials = [
+  {
+    quote: "Absolutely the best catering we have ever had. Short notice, and they came in clutch. Great customer service, amazing pizza, and very aware of the situation we are all in. They held themselves to the highest standard.",
+    author: "Verified Square review",
+  },
+  {
+    quote: "Last night at Poseidon Brewing was a big five-year party. They made me a pepper vegan pizza that was delicioso!",
+    author: "Gary K.",
+  },
+  {
+    quote: "All around wonderful to work with, and delicious.",
+    author: "Verified Square review",
+  },
+  {
+    quote: "It was amazing. The pizzas were so darn good.",
+    author: "@kyrstenashlay.photography",
+  },
+  {
+    quote: "Your business was recommended to me very highly by Austin in Santa Barbara.",
+    author: "Julia",
+  },
+  {
+    quote: "Great pizza, great service!",
+    author: "Mari",
+  },
+  {
+    quote: "Always fantastic service, and delicious.",
+    author: "Verified Square review",
+  },
+  {
+    quote: "Terrific pizza.",
+    author: "Verified Square review",
+  },
+  {
+    quote: "The actual pizza: delish!",
+    author: "Verified Square review",
+  },
+];
 ---
 
 <Layout
@@ -107,15 +148,15 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
           <img
             src="/images/pizzas/margherita.jpg"
-            alt="Margherita Clásica pizza"
+            alt="Margherita pizza"
             class="h-64 w-full object-cover"
           />
           <div class="p-6">
             <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
-              Margherita Clásica
+              Margherita
             </h3>
             <p class="text-wood-600 mb-4">
-              San Marzano tomatoes, fresh mozzarella, basil, extra virgin olive oil
+              Red sauce, fresh mozzarella, fresh basil, oregano, and an olive oil drizzle
             </p>
             <div class="text-fire-600 font-semibold">Traditional favorite</div>
           </div>
@@ -125,15 +166,15 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
           <img
             src="/images/pizzas/street-corn.jpg"
-            alt="Mexican Street Corn pizza"
+            alt="Chipotle Elote pizza"
             class="h-64 w-full object-cover"
           />
           <div class="p-6">
             <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
-              Mexican Street Corn
+              Chipotle Elote
             </h3>
             <p class="text-wood-600 mb-4">
-              Roasted corn, cotija cheese, lime crema, chili powder, cilantro
+              Mozzarella, quesillo, roasted corn, peppers and onions, micro cilantro, Cotija cheese, and chipotle aioli
             </p>
             <div class="text-fire-600 font-semibold">Customer favorite</div>
           </div>
@@ -143,15 +184,15 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105">
           <img
             src="/images/pizzas/al-pastor.jpg"
-            alt="Al Pastor pizza"
+            alt="El Al Pastor pizza"
             class="h-64 w-full object-cover"
           />
           <div class="p-6">
             <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">
-              Al Pastor
+              El Al Pastor
             </h3>
             <p class="text-wood-600 mb-4">
-              Marinated pork, pineapple, onion, cilantro, salsa verde
+              Mozzarella, al pastor, pineapple, salsa verde, pickled red onion, micro cilantro, and crema fresca
             </p>
             <div class="text-fire-600 font-semibold">Seasonal pizza</div>
           </div>
@@ -259,7 +300,7 @@ import Layout from '../layouts/Layout.astro';
           <div class="p-6">
             <div class="text-xs uppercase tracking-wide text-fire-700 font-semibold mb-2">Private Party</div>
             <h3 class="text-2xl font-heading font-bold text-wood-900 mb-2">Backyard Celebration</h3>
-            <p class="text-wood-600">A relaxed family party menu featuring Al Pastor and Mexican Street Corn favorites.</p>
+            <p class="text-wood-600">A relaxed family party menu featuring El Al Pastor and Chipotle Elote favorites.</p>
           </div>
         </article>
       </div>
@@ -357,36 +398,22 @@ import Layout from '../layouts/Layout.astro';
         <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
           What Our Clients Say
         </h2>
+        <p class="text-lg text-wood-600">
+          A few of the notes guests have sent us over the years
+        </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <div class="bg-wood-50 p-6 rounded-lg shadow">
-          <div class="text-fire-600 mb-4">★★★★★</div>
-          <p class="text-wood-700 mb-4">
-            "The pizza was absolutely incredible! Victor and his team made our wedding reception perfect.
-            Highly recommend!"
-          </p>
-          <div class="font-semibold text-wood-900">— Sarah M.</div>
-          <div class="text-sm text-wood-600">Wedding in Ventura</div>
-        </div>
-
-        <div class="bg-wood-50 p-6 rounded-lg shadow">
-          <div class="text-fire-600 mb-4">★★★★★</div>
-          <p class="text-wood-700 mb-4">
-            "Professional, delicious, and authentic. Our corporate event was a huge success thanks to Woodstock Farina!"
-          </p>
-          <div class="font-semibold text-wood-900">— Michael T.</div>
-          <div class="text-sm text-wood-600">Corporate Event</div>
-        </div>
-
-        <div class="bg-wood-50 p-6 rounded-lg shadow">
-          <div class="text-fire-600 mb-4">★★★★★</div>
-          <p class="text-wood-700 mb-4">
-            "The best wood-fired pizza in Ventura County. The Mexican-inspired flavors are unique and amazing!"
-          </p>
-          <div class="font-semibold text-wood-900">— Jessica R.</div>
-          <div class="text-sm text-wood-600">Birthday Party</div>
-        </div>
+      <div class="columns-1 md:columns-2 lg:columns-3 gap-6 max-w-6xl mx-auto">
+        {testimonials.map((testimonial) => (
+          <figure class="bg-wood-50 p-6 rounded-lg shadow mb-6 break-inside-avoid">
+            <blockquote class="text-wood-700">
+              &ldquo;{testimonial.quote}&rdquo;
+            </blockquote>
+            <figcaption class="mt-4 font-semibold text-wood-900">
+              &mdash; {testimonial.author}
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </div>
   </section>
@@ -415,11 +442,11 @@ import Layout from '../layouts/Layout.astro';
           </div>
           <div class="bg-white p-6 rounded-lg shadow">
             <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">What is needed at the venue?</h3>
-            <p class="text-wood-600">A safe setup area and enough room for our mobile wood-fired oven and service line.</p>
+            <p class="text-wood-600">Room for our trailer and a 10 x 10 tent, a gate opening of at least 96 inches, and electricity for evening events.</p>
           </div>
           <div class="bg-white p-6 rounded-lg shadow">
             <h3 class="text-lg font-heading font-bold text-wood-900 mb-2">Do you require a deposit?</h3>
-            <p class="text-wood-600">Yes. A $250 deposit secures your date, with remaining balance due on event day.</p>
+            <p class="text-wood-600">Yes. A $250 deposit secures your date, with the remaining balance due upon conclusion of the event.</p>
           </div>
         </div>
 
