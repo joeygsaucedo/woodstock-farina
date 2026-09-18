@@ -12,4 +12,12 @@ interface ImportMetaEnv {
 	readonly GOOGLE_CALENDAR_ID?: string;
 	readonly GOOGLE_SERVICE_ACCOUNT_EMAIL?: string;
 	readonly GOOGLE_PRIVATE_KEY?: string;
+	readonly SMTP_HOST?: string;
+	readonly SMTP_PORT?: string;
+	readonly SMTP_SECURE?: string;
+	readonly SMTP_USER?: string;
+	readonly SMTP_PASS?: string;
+	readonly SMTP_FROM_EMAIL?: string;
+	readonly SMTP_FROM_NAME?: string;
+	readonly CORPORATE_EMAIL_TO?: string;
 }

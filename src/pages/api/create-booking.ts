@@ -2,6 +2,13 @@ import type { APIRoute } from 'astro';
 import { DateTime } from 'luxon';
 import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../../lib/bookingConfig';
 import { checkRangeAvailability, createBookingEvent } from '../../lib/googleCalendar';
+import {
+  EMAIL_CONFIG,
+  hasEmailConfig,
+  missingEmailConfig,
+  sendEmail,
+  type SendEmailResult,
+} from '../../lib/email';
 
 export const prerender = false;
 
@@ -106,12 +113,120 @@ export const POST: APIRoute = async ({ request }) => {
       end,
     });
 
+    const guestName = String(payload['full-name']);
+    const guestEmail = String(payload.email);
+    const guestPhone = String(payload.phone);
+    const eventType = String(payload['event-type']);
+    const guestCount = String(payload['guest-count']);
+    const venueLocation = String(payload['venue-location']);
+    const packageName = String(payload.package);
+    const preferredContact = String(payload['preferred-contact'] ?? 'email');
+    const additionalNotes = String(payload['additional-notes'] ?? '');
+
+    const localEnd = localStart.plus({ hours: durationHours });
+    const formattedDate = localStart.toFormat('EEEE, LLLL d, yyyy');
+    const formattedTimeRange = `${localStart.toFormat('h:mm a')} - ${localEnd.toFormat('h:mm a')} (${CALENDAR_CONFIG.timezone})`;
+
+    const dietaryText = [
+      `Vegetarian: ${Boolean(payload['dietary-vegetarian']) ? 'Yes' : 'No'}`,
+      `Vegan: ${Boolean(payload['dietary-vegan']) ? 'Yes' : 'No'}`,
+      `Gluten Free: ${Boolean(payload['dietary-gluten-free']) ? 'Yes' : 'No'}`,
+    ].join(', ');
+
+    const bookingNotificationText = [
+      'New booking request received.',
+      '',
+      `Request ID: ${requestId}`,
+      `Name: ${guestName}`,
+      `Email: ${guestEmail}`,
+      `Phone: ${guestPhone}`,
+      `Preferred Contact: ${preferredContact}`,
+      '',
+      `Event Type: ${eventType}`,
+      `Date: ${formattedDate}`,
+      `Time: ${formattedTimeRange}`,
+      `Guest Count: ${guestCount}`,
+      `Venue/Location: ${venueLocation}`,
+      `Package: ${packageName}`,
+      `Dietary: ${dietaryText}`,
+      '',
+      'Additional Notes:',
+      additionalNotes || 'None provided',
+      '',
+      `Calendar Mode: ${eventResult.mode}`,
+      `Calendar Event ID: ${eventResult.eventId}`,
+      eventResult.htmlLink ? `Calendar Link: ${eventResult.htmlLink}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    const customerConfirmationText = [
+      `Hi ${guestName},`,
+      '',
+      'Thanks for reaching out to Woodstock Farina. We received your booking request and will get back to you as soon as we can.',
+      '',
+      `Request ID: ${requestId}`,
+      `Event: ${eventType}`,
+      `Date: ${formattedDate}`,
+      `Time: ${formattedTimeRange}`,
+      `Guests: ${guestCount}`,
+      `Venue: ${venueLocation}`,
+      '',
+      'If you need to add details or make changes, just reply to this email and include your request ID.',
+      '',
+      'Warmly,',
+      'Woodstock Farina',
+      '(661) 754-6510',
+    ].join('\n');
+
+    // Email must never sink a booking that is already on the calendar, so these
+    // are settled independently and only logged. Sent in parallel to stay well
+    // inside the 30s function budget.
+    if (!hasEmailConfig()) {
+      console.error(
+        `Booking ${requestId} created but no email sent. Missing: ${missingEmailConfig().join(', ')}`,
+      );
+    }
+
+    const [ownerNotification, guestConfirmation] = await Promise.allSettled([
+      sendEmail({
+        to: EMAIL_CONFIG.corporateEmailTo,
+        subject: `New Booking Request - ${guestName} - ${formattedDate}`,
+        text: bookingNotificationText,
+        replyTo: guestEmail,
+      }),
+      sendEmail({
+        to: guestEmail,
+        subject: `We received your booking request (${requestId})`,
+        text: customerConfirmationText,
+        replyTo: EMAIL_CONFIG.corporateEmailTo,
+      }),
+    ]);
+
+    const describeSend = (label: string, outcome: PromiseSettledResult<SendEmailResult>): boolean => {
+      if (outcome.status === 'rejected') {
+        console.error(`${label} email failed for ${requestId}:`, outcome.reason);
+        return false;
+      }
+
+      if (!outcome.value.sent) {
+        console.error(`${label} email not sent for ${requestId}: ${outcome.value.reason}`);
+        return false;
+      }
+
+      return true;
+    };
+
+    const ownerNotified = describeSend('Booking notification', ownerNotification);
+    const guestNotified = describeSend('Booking confirmation', guestConfirmation);
+
     return json({
       success: true,
       requestId,
       mode: eventResult.mode,
       eventId: eventResult.eventId,
       eventLink: eventResult.htmlLink,
+      emailed: { owner: ownerNotified, guest: guestNotified },
       message:
         eventResult.mode === 'live'
           ? 'Booking request submitted. We will follow up within 24 hours with your quote and confirmation details.'

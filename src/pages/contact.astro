@@ -137,12 +137,32 @@ const faqs = [
               ></textarea>
             </div>
 
+            <!-- Honeypot: hidden from people, irresistible to bots. -->
+            <div class="absolute w-px h-px -left-[9999px] overflow-hidden" aria-hidden="true">
+              <label for="company-website">Do not fill this in</label>
+              <input
+                type="text"
+                id="company-website"
+                name="company-website"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
             <button
               type="submit"
+              id="contact-submit-btn"
               class="w-full bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
             >
               Send Message
             </button>
+
+            <div
+              id="contact-status"
+              class="hidden rounded-lg px-4 py-3 text-sm"
+              role="status"
+              aria-live="polite"
+            ></div>
 
             <p class="text-sm text-wood-600">
               * Required fields. We'll get back to you within 24 hours!
@@ -375,22 +395,75 @@ const faqs = [
   });
 
   // Contact Form Handling
-  const form = document.getElementById('contact-form');
-  form?.addEventListener('submit', (e) => {
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const submitButton = document.getElementById('contact-submit-btn') as HTMLButtonElement | null;
+  const statusBox = document.getElementById('contact-status') as HTMLDivElement | null;
+
+  const statusStyles = {
+    success: 'bg-green-100 text-green-900 border border-green-200',
+    error: 'bg-red-100 text-red-900 border border-red-200',
+    info: 'bg-wood-100 text-wood-800 border border-wood-200',
+  };
+
+  const statusStyleTokens = Object.values(statusStyles).flatMap((classes) => classes.split(' '));
+
+  const setStatus = (message: string, tone: keyof typeof statusStyles) => {
+    if (!statusBox) {
+      return;
+    }
+
+    statusBox.classList.remove('hidden', ...statusStyleTokens);
+    statusBox.classList.add(...statusStyles[tone].split(' '));
+    statusBox.textContent = message;
+  };
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Get form data
-    const formData = new FormData(form as HTMLFormElement);
-    const data = Object.fromEntries(formData);
+    if (!form.reportValidity()) {
+      return;
+    }
 
-    // In a real implementation, you would send this to your backend/API
-    console.log('Form submitted:', data);
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-    // Show success message (you can make this nicer with a modal or toast)
-    alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending...';
+    }
 
-    // Reset form
-    (form as HTMLFormElement).reset();
+    setStatus('Sending your message...', 'info');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        setStatus(result.message ?? 'Unable to send your message right now. Please try again.', 'error');
+        return;
+      }
+
+      setStatus(
+        result.message ?? 'Thanks for reaching out. We received your message and will get back to you as soon as we can.',
+        'success',
+      );
+      form.reset();
+    } catch (error) {
+      console.error('Contact submission failed:', error);
+      setStatus('Something went wrong while sending your message. Please try again shortly.', 'error');
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Message';
+      }
+    }
   });
 </script>
 
