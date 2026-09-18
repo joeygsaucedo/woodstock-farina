@@ -71,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.warn('Contact form honeypot triggered.');
     return json({
       success: true,
-      message: 'Message received. We will get back to you as soon as we can.',
+      message: 'Message received. We will get back to you within 2-3 business days.',
     });
   }
 
@@ -150,7 +150,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return json({
       success: true,
-      message: 'Message received. We will get back to you as soon as we can.',
+      message: 'Message received. We will get back to you within 2-3 business days.',
     });
   } catch (error) {
     console.error('Contact email send failed:', error);

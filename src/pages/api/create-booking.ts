@@ -73,19 +73,17 @@ export const POST: APIRoute = async ({ request }) => {
   const start = localStart.toUTC().toJSDate();
   const end = localStart.plus({ hours: durationHours }).toUTC().toJSDate();
 
-  const bufferedStart = localStart.minus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
-  const bufferedEnd = localStart
-    .plus({ hours: durationHours + BOOKING_POLICIES.bufferHours })
-    .toUTC()
-    .toJSDate();
+  // Matches check-availability: a booking reserves every calendar day it touches.
+  const dayStart = localStart.startOf('day').toUTC().toJSDate();
+  const dayEnd = localStart.plus({ hours: durationHours }).endOf('day').toUTC().toJSDate();
 
   try {
-    const availability = await checkRangeAvailability(bufferedStart, bufferedEnd);
+    const availability = await checkRangeAvailability(dayStart, dayEnd);
     if (!availability.available) {
       return json(
         {
           success: false,
-          message: 'That date is no longer available. Please choose a different time.',
+          message: 'That date is no longer available. Each event reserves the full day, so please choose another date.',
         },
         409,
       );
@@ -163,7 +161,7 @@ export const POST: APIRoute = async ({ request }) => {
     const customerConfirmationText = [
       `Hi ${guestName},`,
       '',
-      'Thanks for reaching out to Woodstock Farina. We received your booking request and will get back to you as soon as we can.',
+      'Thanks for reaching out to Woodstock Farina. We received your booking request and will get back to you within 2-3 business days with your quote and confirmation details.',
       '',
       `Request ID: ${requestId}`,
       `Event: ${eventType}`,
@@ -229,7 +227,7 @@ export const POST: APIRoute = async ({ request }) => {
       emailed: { owner: ownerNotified, guest: guestNotified },
       message:
         eventResult.mode === 'live'
-          ? 'Booking request submitted. We will follow up within 24 hours with your quote and confirmation details.'
+          ? 'Booking request submitted. We will follow up within 2-3 business days with your quote and confirmation details.'
           : 'Booking request captured in safe mode. Add Google Calendar credentials to enable live calendar event creation.',
     });
   } catch (error) {

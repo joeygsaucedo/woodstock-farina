@@ -9,10 +9,9 @@ const parseNumber = (value: string | undefined, fallback: number): number => {
 
 export const BOOKING_POLICIES = {
   minNoticeDays: parseNumber(import.meta.env.BOOKING_MIN_NOTICE_DAYS, 7),
-  defaultDurationHours: parseNumber(import.meta.env.BOOKING_DEFAULT_DURATION_HOURS, 3),
+  defaultDurationHours: parseNumber(import.meta.env.BOOKING_DEFAULT_DURATION_HOURS, 5),
   serviceStartHour: parseNumber(import.meta.env.BOOKING_SERVICE_START_HOUR, 10),
   serviceEndHour: parseNumber(import.meta.env.BOOKING_SERVICE_END_HOUR, 21),
-  bufferHours: parseNumber(import.meta.env.BOOKING_BUFFER_HOURS, 3),
 };
 
 export const CALENDAR_CONFIG = {

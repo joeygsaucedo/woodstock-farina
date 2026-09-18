@@ -77,19 +77,22 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
+  // A booking reserves the whole day, so availability is checked against every
+  // calendar day the event touches rather than just the service window. A late
+  // start can push the end past midnight, which blocks the following day too.
   const localEnd = localStart.plus({ hours: durationHours });
-  const bufferedStart = localStart.minus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
-  const bufferedEnd = localEnd.plus({ hours: BOOKING_POLICIES.bufferHours }).toUTC().toJSDate();
+  const dayStart = localStart.startOf('day').toUTC().toJSDate();
+  const dayEnd = localEnd.endOf('day').toUTC().toJSDate();
 
   try {
-    const result = await checkRangeAvailability(bufferedStart, bufferedEnd);
+    const result = await checkRangeAvailability(dayStart, dayEnd);
 
     if (!result.available) {
       return new Response(
         JSON.stringify({
           available: false,
           mode: result.mode,
-          message: 'That time is currently unavailable. Please choose another date or time.',
+          message: 'We are already booked that day. Each event reserves the full day, so please choose another date.',
         }),
         {
           status: 200,

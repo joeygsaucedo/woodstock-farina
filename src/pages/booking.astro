@@ -41,6 +41,31 @@ const packages = [
     </div>
   </section>
 
+  <!-- Booking Details -->
+  <section class="py-12 bg-wood-50 border-b border-wood-200">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Minimum Booking</div>
+            <div class="text-lg font-heading font-bold text-wood-900">One full-day reservation</div>
+            <p class="text-sm text-wood-600 mt-2">We take a single event per day, so your date is entirely yours.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Event Duration</div>
+            <div class="text-lg font-heading font-bold text-wood-900">Up to 5 hours</div>
+            <p class="text-sm text-wood-600 mt-2">Service time on site, not counting oven setup beforehand.</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Required Deposit</div>
+            <div class="text-lg font-heading font-bold text-wood-900">$250</div>
+            <p class="text-sm text-wood-600 mt-2">Secures your date. Balance is due on the event day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Booking Form -->
   <section class="py-20 bg-white">
     <div class="container mx-auto px-4">
@@ -353,8 +378,8 @@ const packages = [
               ></div>
 
               <p class="text-sm text-wood-600 mt-4 text-center">
-                By submitting this form, you'll receive a quote and confirmation within 24 hours.
-                We'll reach out to discuss details and secure your date with a deposit.
+                By submitting this form, you'll receive a quote and confirmation within 2-3 business days.
+                We'll reach out to discuss details and secure your date with a $250 deposit.
               </p>
             </div>
           </form>
@@ -393,7 +418,7 @@ const packages = [
             </div>
             <h3 class="font-heading font-bold text-wood-900 mb-2">Get Quote</h3>
             <p class="text-wood-600 text-sm">
-              Receive a custom quote within 24 hours
+              Receive a custom quote within 2-3 business days
             </p>
           </div>
 
@@ -403,7 +428,7 @@ const packages = [
             </div>
             <h3 class="font-heading font-bold text-wood-900 mb-2">Secure Date</h3>
             <p class="text-wood-600 text-sm">
-              Pay 50% deposit to confirm your booking
+              Pay a $250 deposit to confirm your booking
             </p>
           </div>
 
@@ -516,7 +541,7 @@ const packages = [
       eventTime: time,
       guestCount,
       venueLocation,
-      durationHours: 3,
+      durationHours: 5,
     };
   };
 
@@ -805,7 +830,7 @@ const packages = [
     data['dietary-vegetarian'] = formData.has('dietary-vegetarian');
     data['dietary-vegan'] = formData.has('dietary-vegan');
     data['dietary-gluten-free'] = formData.has('dietary-gluten-free');
-    data.durationHours = 3;
+    data.durationHours = 5;
 
     if (submitButton) {
       submitButton.disabled = true;
