@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-const BASE_URL = 'https://woodstockfarina.com';
+import { SITE_URL as BASE_URL } from '../lib/site';
 
 const routes = ['/', '/about', '/menu', '/booking', '/gallery', '/contact'];
 

@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-const BASE_URL = 'https://woodstockfarina.com';
+import { SITE_URL as BASE_URL } from '../lib/site';
 
 export const GET: APIRoute = () => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

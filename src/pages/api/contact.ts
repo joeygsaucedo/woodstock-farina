@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { EMAIL_CONFIG, hasEmailConfig, isValidEmail, missingEmailConfig, sendEmail } from '../../lib/email';
+import { createRateLimiter, getClientKey } from '../../lib/rateLimit';
 
 export const prerender = false;
 
@@ -15,41 +16,7 @@ const requiredFields = ['name', 'email', 'message'] as const;
 // Bots fill every field they find; the form keeps this one off-screen and empty.
 const HONEYPOT_FIELD = 'company-website';
 
-const RATE_LIMIT_MAX = 3;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const recentSubmissions = new Map<string, number[]>();
-
-// Per-instance only: serverless spreads traffic across instances, so this trims
-// naive floods rather than providing a hard guarantee.
-const isRateLimited = (key: string): boolean => {
-  const now = Date.now();
-  const hits = (recentSubmissions.get(key) ?? []).filter(
-    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
-  );
-
-  if (hits.length >= RATE_LIMIT_MAX) {
-    recentSubmissions.set(key, hits);
-    return true;
-  }
-
-  hits.push(now);
-  recentSubmissions.set(key, hits);
-
-  if (recentSubmissions.size > 500) {
-    for (const [entryKey, timestamps] of recentSubmissions) {
-      if (timestamps.every((timestamp) => now - timestamp >= RATE_LIMIT_WINDOW_MS)) {
-        recentSubmissions.delete(entryKey);
-      }
-    }
-  }
-
-  return false;
-};
-
-const getClientKey = (request: Request): string => {
-  const forwarded = request.headers.get('x-forwarded-for');
-  return forwarded?.split(',')[0]?.trim() || 'unknown';
-};
+const isRateLimited = createRateLimiter({ max: 3, windowMs: 10 * 60 * 1000 });
 
 export const POST: APIRoute = async ({ request }) => {
   let payload: Record<string, unknown>;

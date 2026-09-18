@@ -5,7 +5,8 @@ import vercel from '@astrojs/vercel/serverless';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://woodstockfarina.com',
+  // Keep in sync with SITE_URL in src/lib/site.ts.
+  site: process.env.PUBLIC_SITE_URL ?? 'https://project-bo5zl.vercel.app',
   integrations: [
     react(),
     tailwind({

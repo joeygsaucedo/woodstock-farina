@@ -5,10 +5,12 @@ import { checkRangeAvailability, createBookingEvent } from '../../lib/googleCale
 import {
   EMAIL_CONFIG,
   hasEmailConfig,
+  isValidEmail,
   missingEmailConfig,
   sendEmail,
   type SendEmailResult,
 } from '../../lib/email';
+import { createRateLimiter, getClientKey } from '../../lib/rateLimit';
 
 export const prerender = false;
 
@@ -30,6 +32,25 @@ const requiredFields = [
   'email',
   'phone',
 ] as const;
+
+// Each accepted request writes a calendar event and sends two emails, and one
+// event blocks the whole day, so an unthrottled endpoint could blank out the
+// booking calendar. Generous enough for a real customer retrying.
+const isRateLimited = createRateLimiter({ max: 5, windowMs: 60 * 60 * 1000 });
+
+// Everything here lands in a calendar event and two emails, so cap the inputs.
+const fieldLimits: Record<string, number> = {
+  'full-name': 100,
+  email: 254,
+  phone: 40,
+  'event-type': 60,
+  'venue-location': 300,
+  package: 80,
+  'preferred-contact': 20,
+  'additional-notes': 2000,
+};
+
+const MAX_GUESTS = 2000;
 
 const generateRequestId = (): string => {
   const stamp = Date.now().toString(36).toUpperCase();
@@ -57,6 +78,35 @@ export const POST: APIRoute = async ({ request }) => {
     if (!payload[field]) {
       return json({ success: false, message: `Missing required field: ${field}` }, 400);
     }
+  }
+
+  for (const [field, limit] of Object.entries(fieldLimits)) {
+    if (String(payload[field] ?? '').length > limit) {
+      return json(
+        { success: false, message: `${field} is too long (maximum ${limit} characters).` },
+        400,
+      );
+    }
+  }
+
+  if (!isValidEmail(String(payload.email).trim())) {
+    return json({ success: false, message: 'Please enter a valid email address.' }, 400);
+  }
+
+  const parsedGuests = Number(payload['guest-count']);
+  if (!Number.isFinite(parsedGuests) || parsedGuests < 1 || parsedGuests > MAX_GUESTS) {
+    return json({ success: false, message: 'Please enter a valid guest count.' }, 400);
+  }
+
+  if (isRateLimited(getClientKey(request))) {
+    return json(
+      {
+        success: false,
+        message:
+          "We've received several requests from you already. Please give us a little time, or call (661) 754-6510.",
+      },
+      429,
+    );
   }
 
   const eventDate = String(payload['event-date']);
