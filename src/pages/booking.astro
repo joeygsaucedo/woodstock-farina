@@ -47,9 +47,9 @@ const packages = [
       <div class="max-w-4xl mx-auto">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div class="bg-white p-6 rounded-lg shadow">
-            <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Minimum Booking</div>
-            <div class="text-lg font-heading font-bold text-wood-900">One full-day reservation</div>
-            <p class="text-sm text-wood-600 mt-2">We take a single event per day, so your date is entirely yours.</p>
+            <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">One Event Per Day</div>
+            <div class="text-lg font-heading font-bold text-wood-900">Your date is yours alone</div>
+            <p class="text-sm text-wood-600 mt-2">We never double-book, so your celebration is never rushed or shared.</p>
           </div>
           <div class="bg-white p-6 rounded-lg shadow">
             <div class="text-sm font-medium text-wood-500 uppercase tracking-wide mb-2">Event Duration</div>
@@ -136,10 +136,14 @@ const packages = [
                     id="guest-count"
                     name="guest-count"
                     required
-                    min="20"
+                    min="1"
                     placeholder="e.g., 75"
                     class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent"
                   />
+                  <p class="text-xs text-wood-500 mt-2">
+                    Typically a 30-guest minimum. Planning something smaller? Send the request anyway and we
+                    will do our best.
+                  </p>
                 </div>
               </div>
 
@@ -465,6 +469,10 @@ const packages = [
             <li>
               Every pizza is made on site with our own house-made dough and freshly prepared ingredients. Everything
               served comes straight from our oven, and we set out your orders as each batch finishes.
+            </li>
+            <li>
+              A team of two to four, depending on the size of your event, handles setup, cooking, and service
+              from start to finish. Plates, napkins, and cutlery are included with every meal package.
             </li>
             <li>
               We need ample space to set up: enough room for our trailer and a 10 x 10 tent. The oven can go anywhere
