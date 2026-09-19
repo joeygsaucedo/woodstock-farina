@@ -20,3 +20,7 @@ pnpm-debug.log*
 
 # vercel
 .vercel
+
+# astro dev server artifacts
+.astro/dev.json
+.astro/dev.log

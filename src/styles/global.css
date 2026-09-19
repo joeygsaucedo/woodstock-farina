@@ -1,6 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* Tailwind 4 takes theme values from CSS custom properties rather than a JS
+   config file. These mirror the previous tailwind.config.mjs extend block. */
+@theme {
+  --color-wood-50: #faf8f5;
+  --color-wood-100: #f5f0e8;
+  --color-wood-200: #e8dcc8;
+  --color-wood-300: #d8c4a0;
+  --color-wood-400: #c8a876;
+  --color-wood-500: #b8924f;
+  --color-wood-600: #a07a3e;
+  --color-wood-700: #856334;
+  --color-wood-800: #6d512f;
+  --color-wood-900: #5a4429;
+
+  --color-fire-50: #fef4ee;
+  --color-fire-100: #fde6d7;
+  --color-fire-200: #fac9ae;
+  --color-fire-300: #f7a47a;
+  --color-fire-400: #f37244;
+  --color-fire-500: #f04a1f;
+  --color-fire-600: #e13215;
+  --color-fire-700: #bb2313;
+  --color-fire-800: #951f17;
+  --color-fire-900: #791c16;
+
+  --font-heading: Merriweather, serif;
+  --font-body: Inter, sans-serif;
+}
 
 @layer base {
   body {
