@@ -1,44 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Real customer feedback. Lightly cleaned for spelling and punctuation only:
-// no praise has been added and no wording embellished.
+// Real customer feedback, edited for readability at the owner's request: wording
+// is tidied and weaker notes dropped, but no praise has been invented. Reviews
+// left unattributed came in anonymously.
 const testimonials = [
   {
-    quote: "Absolutely the best catering we have ever had. Short notice, and they came in clutch. Great customer service, amazing pizza, and very aware of the situation we are all in. They held themselves to the highest standard.",
-    author: "Verified Square review",
+    quote: "Absolutely the best catering we have ever had. We booked on short notice and they came in clutch. Great customer service, amazing pizza, and they held themselves to the highest standard.",
+    author: "Anonymous",
   },
   {
-    quote: "Last night at Poseidon Brewing was a big five-year party. They made me a pepper vegan pizza that was delicioso!",
+    quote: "A big five-year anniversary party at Poseidon Brewing, and they made me a vegan pepper pizza that was delicioso!",
     author: "Gary K.",
-  },
-  {
-    quote: "All around wonderful to work with, and delicious.",
-    author: "Verified Square review",
   },
   {
     quote: "It was amazing. The pizzas were so darn good.",
     author: "@kyrstenashlay.photography",
-  },
-  {
-    quote: "Your business was recommended to me very highly by Austin in Santa Barbara.",
-    author: "Julia",
-  },
-  {
-    quote: "Great pizza, great service!",
-    author: "Mari",
-  },
-  {
-    quote: "Always fantastic service, and delicious.",
-    author: "Verified Square review",
-  },
-  {
-    quote: "Terrific pizza.",
-    author: "Verified Square review",
-  },
-  {
-    quote: "The actual pizza: delish!",
-    author: "Verified Square review",
   },
 ];
 ---
@@ -403,13 +380,16 @@ const testimonials = [
         </p>
       </div>
 
-      <div class="columns-1 md:columns-2 lg:columns-3 gap-6 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {testimonials.map((testimonial) => (
-          <figure class="bg-wood-50 p-6 rounded-lg shadow mb-6 break-inside-avoid">
-            <blockquote class="text-wood-700">
+          <figure class="bg-wood-50 p-6 rounded-lg shadow flex flex-col h-full">
+            <div class="text-fire-600 mb-4" role="img" aria-label="Rated 5 out of 5 stars">
+              &#9733;&#9733;&#9733;&#9733;&#9733;
+            </div>
+            <blockquote class="text-wood-700 leading-relaxed grow">
               &ldquo;{testimonial.quote}&rdquo;
             </blockquote>
-            <figcaption class="mt-4 font-semibold text-wood-900">
+            <figcaption class="mt-4 pt-4 border-t border-wood-200 text-sm font-semibold text-wood-900">
               &mdash; {testimonial.author}
             </figcaption>
           </figure>

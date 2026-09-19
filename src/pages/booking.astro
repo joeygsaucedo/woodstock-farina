@@ -5,22 +5,22 @@ const packages = [
   {
     name: "Fire y Fiesta",
     price: "$48 per person",
-    includes: "3 pizzas, 2 appetizers, 2 salads, and a 4 ft grazing table"
+    includes: "3 pizza varieties, 2 appetizers, 2 salads, and a 4 ft grazing table"
   },
   {
     name: "Sabor Social",
     price: "$35 per person",
-    includes: "3 pizzas, 2 appetizers, and 1 salad"
+    includes: "3 pizza varieties, 2 appetizers, and 1 salad"
   },
   {
     name: "Amigos y Appetites",
     price: "$30 per person",
-    includes: "3 pizzas and 1 salad"
+    includes: "3 pizza varieties and 1 salad"
   },
   {
     name: "Slices de Sabores",
     price: "$25 per person",
-    includes: "3 pizzas, cut and served by the slice"
+    includes: "3 pizza varieties, cut and served by the slice"
   }
 ];
 ---
@@ -152,7 +152,7 @@ const packages = [
                   id="venue-location"
                   name="venue-location"
                   required
-                  placeholder="Venue name and city"
+                  placeholder="Venue name and city, or TBD"
                   autocomplete="off"
                   class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent"
                 />
@@ -164,7 +164,8 @@ const packages = [
                   role="listbox"
                 ></ul>
                 <p class="text-xs text-wood-500 mt-2">
-                  Start typing and select a suggested address so we can verify the venue location.
+                  Start typing to pick a suggested address, or just type the venue name. Not settled on a
+                  location yet? Enter &ldquo;TBD&rdquo; and we will sort it out together.
                 </p>
               </div>
 
@@ -817,11 +818,6 @@ const packages = [
       return;
     }
 
-    if (!locationState.selected) {
-      setStatus('Select a suggested venue/location so we can verify the address.', 'error');
-      return;
-    }
-
     availabilityButton.disabled = true;
     availabilityButton.textContent = 'Checking...';
 
@@ -865,11 +861,6 @@ const packages = [
       if (submitButton) {
         submitButton.disabled = true;
       }
-      return;
-    }
-
-    if (!locationState.selected) {
-      setStatus('Please select a suggested venue/location before submitting.', 'error');
       return;
     }
 

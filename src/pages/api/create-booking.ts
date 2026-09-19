@@ -194,7 +194,7 @@ export const POST: APIRoute = async ({ request }) => {
       `Date: ${formattedDate}`,
       `Time: ${formattedTimeRange}`,
       `Guest Count: ${guestCount}`,
-      `Venue/Location: ${venueLocation}`,
+      `Venue/Location: ${venueLocation}${payload['venue-location-id'] ? ' (verified address)' : ' (typed by guest, not verified)'}`,
       `Package: ${packageName}`,
       `Dietary: ${dietaryText}`,
       '',
