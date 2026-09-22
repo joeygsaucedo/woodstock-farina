@@ -1,5 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import UpcomingEvents from '../components/UpcomingEvents.astro';
+
+export const prerender = false;
+
+// Events are fetched per request, so cache hard at the CDN: nearly every
+// visitor still gets a static-speed response.
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+
 
 // Real customer feedback, edited for readability at the owner's request: wording
 // is tidied and weaker notes dropped, but no praise has been invented. Reviews
@@ -186,6 +194,8 @@ const testimonials = [
       </div>
     </div>
   </section>
+
+  <UpcomingEvents background="wood" />
 
   <!-- Media Features -->
   <section class="py-20 bg-wood-50">

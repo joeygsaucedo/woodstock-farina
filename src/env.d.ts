@@ -19,4 +19,10 @@ interface ImportMetaEnv {
 	readonly SMTP_FROM_EMAIL?: string;
 	readonly SMTP_FROM_NAME?: string;
 	readonly CORPORATE_EMAIL_TO?: string;
+	readonly EVENTS_CALENDAR_ID?: string;
+	readonly ADMIN_PASSWORD?: string;
+	readonly ADMIN_SESSION_SECRET?: string;
+	readonly BLOB_READ_WRITE_TOKEN?: string;
+	readonly CRON_SECRET?: string;
+	readonly PUBLIC_SITE_URL?: string;
 }

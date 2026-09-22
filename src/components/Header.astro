@@ -40,6 +40,12 @@ const navLinkBase = 'inline-flex items-center h-full text-wood-700 hover:text-fi
           Gallery
         </a>
         <a
+          href="/events"
+          class={`${navLinkBase} ${currentPath === '/events' ? 'text-fire-600 border-fire-600' : ''}`}
+        >
+          Events
+        </a>
+        <a
           href="/contact"
           class={`${navLinkBase} ${currentPath === '/contact' ? 'text-fire-600 border-fire-600' : ''}`}
         >
@@ -72,6 +78,7 @@ const navLinkBase = 'inline-flex items-center h-full text-wood-700 hover:text-fi
         <a href="/menu" class="text-wood-700 hover:text-fire-600 font-medium py-2">Menu</a>
         <a href="/about" class="text-wood-700 hover:text-fire-600 font-medium py-2">About</a>
         <a href="/gallery" class="text-wood-700 hover:text-fire-600 font-medium py-2">Gallery</a>
+        <a href="/events" class="text-wood-700 hover:text-fire-600 font-medium py-2">Events</a>
         <a href="/contact" class="text-wood-700 hover:text-fire-600 font-medium py-2">Contact</a>
         <a href="/booking" class="bg-fire-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-fire-700 transition-colors text-center">
           Book Event

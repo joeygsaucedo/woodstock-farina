@@ -1,0 +1,444 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { isAuthenticated, hasAdminConfig } from '../lib/adminAuth';
+import { hasEventsCalendar } from '../lib/events';
+
+export const prerender = false;
+
+const authed = isAuthenticated(Astro.request);
+const configured = hasAdminConfig();
+const calendarReady = hasEventsCalendar();
+
+// Never let this page be indexed or cached, whatever else happens.
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+const field =
+  'w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent';
+const label = 'block text-wood-700 font-medium mb-2';
+---
+
+<Layout title="Admin - Woodstock Farina" noindex={true}>
+  <section class="py-16 bg-wood-50 min-h-[70vh]">
+    <div class="container mx-auto px-4">
+      {!configured && (
+        <div class="max-w-xl mx-auto bg-red-50 border border-red-200 text-red-900 rounded-lg p-6">
+          <h1 class="text-2xl font-heading font-bold mb-2">Admin is not configured</h1>
+          <p>Set ADMIN_PASSWORD and ADMIN_SESSION_SECRET in Vercel, then redeploy.</p>
+        </div>
+      )}
+
+      {configured && !authed && (
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
+          <h1 class="text-3xl font-heading font-bold text-wood-900 mb-6">Admin Sign In</h1>
+          <form id="login-form" class="space-y-4">
+            <div>
+              <label for="password" class={label}>Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                autocomplete="current-password"
+                class={field}
+              />
+            </div>
+            <button
+              type="submit"
+              id="login-btn"
+              class="w-full bg-fire-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-fire-700 transition-colors disabled:opacity-50"
+            >
+              Sign In
+            </button>
+            <div id="login-status" class="hidden rounded-lg px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      )}
+
+      {configured && authed && (
+        <div class="max-w-5xl mx-auto">
+          <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-heading font-bold text-wood-900">Manage Events</h1>
+            <button type="button" id="logout-btn" class="text-wood-600 hover:text-fire-600 font-medium">
+              Sign out
+            </button>
+          </div>
+
+          {!calendarReady && (
+            <div class="bg-red-50 border border-red-200 text-red-900 rounded-lg p-4 mb-6">
+              Events calendar is not configured. Set EVENTS_CALENDAR_ID and redeploy.
+            </div>
+          )}
+
+          <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-10">
+            <h2 id="form-heading" class="text-2xl font-heading font-bold text-wood-900 mb-6">Add an Event</h2>
+            <form id="event-form" class="space-y-5">
+              <input type="hidden" id="event-id" />
+              <input type="hidden" id="image-url" />
+              <input type="hidden" id="image-path" />
+
+              <div>
+                <label for="title" class={label}>Title *</label>
+                <input type="text" id="title" required maxlength="120" class={field} placeholder="Pop-Up at Poseidon Brewing" />
+              </div>
+
+              <div>
+                <label for="location" class={label}>Location</label>
+                <input type="text" id="location" maxlength="200" class={field} placeholder="Poseidon Brewing Co, Ventura" />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label for="date" class={label}>Date *</label>
+                  <input type="date" id="date" required class={field} />
+                </div>
+                <div>
+                  <label for="startTime" class={label}>Start *</label>
+                  <input type="time" id="startTime" required class={field} />
+                </div>
+                <div>
+                  <label for="endTime" class={label}>End *</label>
+                  <input type="time" id="endTime" required class={field} />
+                </div>
+              </div>
+              <p class="text-xs text-wood-500">All times are Pacific.</p>
+
+              <div>
+                <label for="description" class={label}>Description</label>
+                <textarea
+                  id="description"
+                  rows="4"
+                  maxlength="2000"
+                  class={field + ' resize-none'}
+                  placeholder="What is happening and what guests can expect."
+                ></textarea>
+              </div>
+
+              <div>
+                <label for="image" class={label}>Image</label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  class="block w-full text-sm text-wood-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-fire-600 file:text-white file:font-semibold hover:file:bg-fire-700"
+                />
+                <p class="text-xs text-wood-500 mt-2">JPG, PNG, WebP or AVIF. Maximum 5MB.</p>
+                <div id="image-preview" class="hidden mt-4">
+                  <img id="image-preview-img" src="" alt="Selected event image" class="h-40 w-auto rounded-lg shadow" />
+                  <button type="button" id="remove-image" class="mt-2 text-sm text-fire-600 hover:text-fire-700 font-medium">
+                    Remove image
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-3 pt-2">
+                <button
+                  type="submit"
+                  id="save-btn"
+                  class="bg-fire-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-fire-700 transition-colors disabled:opacity-50"
+                >
+                  Save Event
+                </button>
+                <button
+                  type="button"
+                  id="cancel-edit"
+                  class="hidden bg-white border-2 border-wood-300 text-wood-700 px-8 py-3 rounded-full font-semibold hover:border-wood-400 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <div id="form-status" class="hidden rounded-lg px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <h2 class="text-2xl font-heading font-bold text-wood-900 mb-4">Current Events</h2>
+          <div id="event-list" class="space-y-4">
+            <p class="text-wood-600">Loading...</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const statusStyles = {
+    success: 'bg-green-100 text-green-900 border border-green-200',
+    error: 'bg-red-100 text-red-900 border border-red-200',
+    info: 'bg-wood-100 text-wood-800 border border-wood-200',
+  };
+  const allTokens = Object.values(statusStyles).flatMap((c) => c.split(' '));
+
+  const setStatus = (el: HTMLElement | null, message: string, tone: keyof typeof statusStyles) => {
+    if (!el) return;
+    el.classList.remove('hidden', ...allTokens);
+    el.classList.add(...statusStyles[tone].split(' '));
+    el.textContent = message;
+  };
+
+  const hide = (el: HTMLElement | null) => el?.classList.add('hidden');
+
+  // Event text is admin-authored but still rendered into innerHTML, so escape it.
+  const esc = (value: string) =>
+    String(value ?? '').replace(/[&<>"']/g, (c) => {
+      const map: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      };
+      return map[c];
+    });
+
+  const loginForm = document.getElementById('login-form') as HTMLFormElement | null;
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn') as HTMLButtonElement;
+    const status = document.getElementById('login-status');
+    const password = (document.getElementById('password') as HTMLInputElement).value;
+
+    btn.disabled = true;
+    setStatus(status, 'Signing in...', 'info');
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setStatus(status, data.message || 'Sign in failed.', 'error');
+        btn.disabled = false;
+        return;
+      }
+      location.reload();
+    } catch {
+      setStatus(status, 'Something went wrong. Please try again.', 'error');
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('logout-btn')?.addEventListener('click', async () => {
+    await fetch('/api/admin/login', { method: 'DELETE' });
+    location.reload();
+  });
+
+  const eventForm = document.getElementById('event-form') as HTMLFormElement | null;
+
+  if (eventForm) {
+    const listEl = document.getElementById('event-list') as HTMLElement;
+    const formStatus = document.getElementById('form-status');
+    const formHeading = document.getElementById('form-heading') as HTMLElement;
+    const cancelBtn = document.getElementById('cancel-edit') as HTMLButtonElement;
+    const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+    const fileInput = document.getElementById('image') as HTMLInputElement;
+    const preview = document.getElementById('image-preview') as HTMLElement;
+    const previewImg = document.getElementById('image-preview-img') as HTMLImageElement;
+
+    const val = (id: string) => (document.getElementById(id) as HTMLInputElement).value;
+    const setVal = (id: string, v: string) => {
+      (document.getElementById(id) as HTMLInputElement).value = v;
+    };
+
+    const showPreview = (url: string) => {
+      if (url) {
+        previewImg.src = url;
+        preview.classList.remove('hidden');
+      } else {
+        preview.classList.add('hidden');
+        previewImg.src = '';
+      }
+    };
+
+    const resetForm = () => {
+      eventForm.reset();
+      setVal('event-id', '');
+      setVal('image-url', '');
+      setVal('image-path', '');
+      showPreview('');
+      formHeading.textContent = 'Add an Event';
+      cancelBtn.classList.add('hidden');
+    };
+
+    const pacific = (d: Date, opts: Intl.DateTimeFormatOptions) =>
+      new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', ...opts }).format(d);
+
+    const fmt = (iso: string) =>
+      new Date(iso).toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: 'America/Los_Angeles',
+      });
+
+    let cached: any[] = [];
+
+    const loadEvents = async () => {
+      try {
+        const res = await fetch('/api/admin/events');
+        const data = await res.json();
+        if (!data.success) {
+          listEl.innerHTML = '<p class="text-red-700">' + esc(data.message || 'Could not load events.') + '</p>';
+          return;
+        }
+        cached = data.events;
+        if (!cached.length) {
+          listEl.innerHTML = '<p class="text-wood-600">No events yet. Add one above.</p>';
+          return;
+        }
+        listEl.innerHTML = cached
+          .map((ev) => {
+            const img = ev.imageUrl
+              ? '<img src="' + esc(ev.imageUrl) + '" alt="" class="h-20 w-20 object-cover rounded-lg shrink-0" />'
+              : '';
+            return (
+              '<div class="bg-white rounded-lg shadow p-5 flex flex-col sm:flex-row gap-4 items-start">' +
+              img +
+              '<div class="grow">' +
+              '<h3 class="text-lg font-heading font-bold text-wood-900">' + esc(ev.title) + '</h3>' +
+              '<p class="text-sm text-fire-600 font-medium">' + fmt(ev.start) + ' to ' + fmt(ev.end) + '</p>' +
+              (ev.location ? '<p class="text-sm text-wood-600">' + esc(ev.location) + '</p>' : '') +
+              (ev.description ? '<p class="text-sm text-wood-600 mt-2">' + esc(ev.description) + '</p>' : '') +
+              '</div>' +
+              '<div class="flex gap-2 shrink-0">' +
+              '<button type="button" data-edit="' + esc(ev.id) + '" class="px-4 py-2 rounded-full border-2 border-wood-300 text-wood-700 text-sm font-semibold hover:border-wood-400">Edit</button>' +
+              '<button type="button" data-delete="' + esc(ev.id) + '" class="px-4 py-2 rounded-full bg-red-600 text-white text-sm font-semibold hover:bg-red-700">Delete</button>' +
+              '</div></div>'
+            );
+          })
+          .join('');
+      } catch {
+        listEl.innerHTML = '<p class="text-red-700">Could not load events.</p>';
+      }
+    };
+
+    // Upload as soon as a file is picked, so saving stays fast and any problem
+    // with the image surfaces immediately rather than on submit.
+    fileInput?.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+
+      setStatus(formStatus, 'Uploading image...', 'info');
+      saveBtn.disabled = true;
+      const body = new FormData();
+      body.append('image', file);
+      try {
+        const res = await fetch('/api/admin/upload', { method: 'POST', body });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          setStatus(formStatus, data.message || 'Image upload failed.', 'error');
+          fileInput.value = '';
+          return;
+        }
+        setVal('image-url', data.url);
+        setVal('image-path', data.path);
+        showPreview(data.url);
+        setStatus(formStatus, 'Image uploaded.', 'success');
+      } catch {
+        setStatus(formStatus, 'Image upload failed.', 'error');
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
+
+    document.getElementById('remove-image')?.addEventListener('click', () => {
+      setVal('image-url', '');
+      setVal('image-path', '');
+      fileInput.value = '';
+      showPreview('');
+    });
+
+    cancelBtn?.addEventListener('click', () => {
+      resetForm();
+      hide(formStatus);
+    });
+
+    eventForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = val('event-id');
+      const payload = {
+        title: val('title'),
+        description: (document.getElementById('description') as HTMLTextAreaElement).value,
+        location: val('location'),
+        date: val('date'),
+        startTime: val('startTime'),
+        endTime: val('endTime'),
+        imageUrl: val('image-url'),
+        imagePath: val('image-path'),
+      };
+
+      saveBtn.disabled = true;
+      setStatus(formStatus, id ? 'Updating...' : 'Saving...', 'info');
+      try {
+        const res = await fetch(id ? '/api/admin/events/' + id : '/api/admin/events', {
+          method: id ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          setStatus(formStatus, data.message || 'Could not save the event.', 'error');
+          return;
+        }
+        const wasEdit = Boolean(id);
+        resetForm();
+        setStatus(formStatus, wasEdit ? 'Event updated.' : 'Event added.', 'success');
+        await loadEvents();
+      } catch {
+        setStatus(formStatus, 'Could not save the event. Please try again.', 'error');
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
+
+    listEl.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+
+      const editId = target.getAttribute('data-edit');
+      if (editId) {
+        const ev = cached.find((x) => x.id === editId);
+        if (!ev) return;
+        const start = new Date(ev.start);
+        const end = new Date(ev.end);
+        setVal('event-id', ev.id);
+        setVal('title', ev.title);
+        setVal('location', ev.location || '');
+        setVal('date', pacific(start, { year: 'numeric', month: '2-digit', day: '2-digit' }));
+        setVal('startTime', pacific(start, { hour: '2-digit', minute: '2-digit', hour12: false }));
+        setVal('endTime', pacific(end, { hour: '2-digit', minute: '2-digit', hour12: false }));
+        (document.getElementById('description') as HTMLTextAreaElement).value = ev.description || '';
+        setVal('image-url', ev.imageUrl || '');
+        setVal('image-path', ev.imagePath || '');
+        showPreview(ev.imageUrl || '');
+        formHeading.textContent = 'Edit Event';
+        cancelBtn.classList.remove('hidden');
+        hide(formStatus);
+        eventForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      const deleteId = target.getAttribute('data-delete');
+      if (deleteId) {
+        if (!confirm('Delete this event? This cannot be undone.')) return;
+        target.setAttribute('disabled', 'true');
+        try {
+          const res = await fetch('/api/admin/events/' + deleteId, { method: 'DELETE' });
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            setStatus(formStatus, data.message || 'Could not delete the event.', 'error');
+            return;
+          }
+          await loadEvents();
+        } catch {
+          setStatus(formStatus, 'Could not delete the event.', 'error');
+        }
+      }
+    });
+
+    loadEvents();
+  }
+</script>

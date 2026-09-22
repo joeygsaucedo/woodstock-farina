@@ -1,4 +1,10 @@
 {
   "framework": "astro",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-events",
+      "schedule": "0 11 * * *"
+    }
+  ]
 }

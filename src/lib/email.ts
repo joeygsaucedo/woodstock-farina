@@ -1,16 +1,5 @@
 import nodemailer from 'nodemailer';
-
-// Vite inlines `import.meta.env.FOO` at build time when FOO exists in the build
-// environment, and bakes in `undefined` when it doesn't. Falling back to
-// process.env means a variable added in Vercel after a build still resolves at
-// runtime instead of staying permanently undefined.
-// Note the `||`: Vite inlines an empty string for a variable that exists but is
-// blank at build time, and `??` would treat that as a real value and never
-// consult process.env.
-const readEnv = (inlined: string | undefined, key: string): string | undefined => {
-  const trimmed = inlined?.trim() || process.env[key]?.trim();
-  return trimmed ? trimmed : undefined;
-};
+import { readEnv } from './env';
 
 const parseNumber = (value: string | undefined, fallback: number): number => {
   if (!value) {

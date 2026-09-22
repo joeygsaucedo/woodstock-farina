@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 import { SITE_URL as BASE_URL } from '../lib/site';
 
-const routes = ['/', '/about', '/menu', '/booking', '/gallery', '/contact'];
+const routes = ['/', '/about', '/menu', '/booking', '/gallery', '/events', '/contact'];
 
 export const GET: APIRoute = () => {
   const urls = routes

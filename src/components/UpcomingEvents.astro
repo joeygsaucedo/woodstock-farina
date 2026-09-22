@@ -1,0 +1,100 @@
+---
+import { DateTime } from 'luxon';
+import { listUpcomingEvents, hasEventsCalendar, type SiteEvent } from '../lib/events';
+import { CALENDAR_CONFIG } from '../lib/bookingConfig';
+
+interface Props {
+  limit?: number;
+  heading?: string;
+  subheading?: string;
+  /** Link through to the full events page. Off on the events page itself. */
+  showViewAll?: boolean;
+  background?: 'white' | 'wood';
+}
+
+const {
+  limit = 3,
+  heading = 'Upcoming Events',
+  subheading = 'Catch us out and about across Ventura County',
+  showViewAll = true,
+  background = 'white',
+} = Astro.props;
+
+// This component sits on the homepage, menu and about pages. A Calendar outage
+// must never take those down, so any failure degrades to rendering nothing.
+let events: SiteEvent[] = [];
+if (hasEventsCalendar()) {
+  try {
+    events = await listUpcomingEvents(limit);
+  } catch (error) {
+    console.error('Could not load upcoming events:', error);
+    events = [];
+  }
+}
+
+const zone = CALENDAR_CONFIG.timezone;
+
+const formatDay = (iso: string) =>
+  DateTime.fromISO(iso).setZone(zone).toFormat('EEE, LLL d');
+
+const formatRange = (startIso: string, endIso: string) => {
+  const start = DateTime.fromISO(startIso).setZone(zone);
+  const end = DateTime.fromISO(endIso).setZone(zone);
+  return `${start.toFormat('h:mm a')} - ${end.toFormat('h:mm a')}`;
+};
+
+const sectionBg = background === 'wood' ? 'bg-wood-50' : 'bg-white';
+---
+
+{events.length > 0 && (
+  <section class={`py-20 ${sectionBg}`}>
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-wood-900 mb-4">
+          {heading}
+        </h2>
+        {subheading && <p class="text-lg text-wood-600">{subheading}</p>}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {events.map((event) => (
+          <article class="bg-wood-50 rounded-lg overflow-hidden shadow-lg flex flex-col h-full">
+            {event.imageUrl && (
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                loading="lazy"
+                class="h-52 w-full object-cover"
+              />
+            )}
+            <div class="p-6 flex flex-col grow">
+              <div class="text-fire-600 font-semibold text-sm mb-2">
+                {formatDay(event.start)} &middot; {formatRange(event.start, event.end)}
+              </div>
+              <h3 class="text-xl font-heading font-bold text-wood-900 mb-2">
+                {event.title}
+              </h3>
+              {event.location && (
+                <p class="text-sm text-wood-500 mb-3">{event.location}</p>
+              )}
+              {event.description && (
+                <p class="text-wood-600 grow">{event.description}</p>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {showViewAll && (
+        <div class="text-center mt-12">
+          <a
+            href="/events"
+            class="inline-block bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
+          >
+            See All Events
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+)}

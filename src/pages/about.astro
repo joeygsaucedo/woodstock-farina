@@ -1,5 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import UpcomingEvents from '../components/UpcomingEvents.astro';
+
+export const prerender = false;
+
+// Events are fetched per request, so cache hard at the CDN: nearly every
+// visitor still gets a static-speed response.
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+
 ---
 
 <Layout
@@ -342,4 +350,10 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </section>
+  <UpcomingEvents
+    background="wood"
+    heading="Where to Find Us"
+    subheading="Upcoming pop-ups and appearances"
+  />
+
 </Layout>

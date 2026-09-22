@@ -1,5 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import UpcomingEvents from '../components/UpcomingEvents.astro';
+
+export const prerender = false;
+
+// Events are fetched per request, so cache hard at the CDN: nearly every
+// visitor still gets a static-speed response.
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+
 
 const pizzas = [
   {
@@ -461,6 +469,12 @@ const grazingIncludes = [
       </div>
     </div>
   </section>
+
+  <UpcomingEvents
+    background="wood"
+    heading="Taste It In Person"
+    subheading="Catch one of our upcoming pop-ups before you book"
+  />
 
   <!-- CTA -->
   <section class="py-16 bg-gradient-to-br from-fire-600 to-fire-700 text-white">

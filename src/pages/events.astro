@@ -1,0 +1,135 @@
+---
+import { DateTime } from 'luxon';
+import Layout from '../layouts/Layout.astro';
+import { listUpcomingEvents, hasEventsCalendar, type SiteEvent } from '../lib/events';
+import { CALENDAR_CONFIG } from '../lib/bookingConfig';
+
+export const prerender = false;
+
+// Rendered per request so a newly added event appears without a rebuild, but
+// cached at the CDN so almost every visitor still gets a static-speed response.
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+
+let events: SiteEvent[] = [];
+let loadFailed = false;
+
+if (hasEventsCalendar()) {
+  try {
+    events = await listUpcomingEvents(50);
+  } catch (error) {
+    console.error('Could not load events page:', error);
+    loadFailed = true;
+  }
+}
+
+const zone = CALENDAR_CONFIG.timezone;
+
+const formatDate = (iso: string) =>
+  DateTime.fromISO(iso).setZone(zone).toFormat('EEEE, LLLL d, yyyy');
+
+const formatRange = (startIso: string, endIso: string) => {
+  const start = DateTime.fromISO(startIso).setZone(zone);
+  const end = DateTime.fromISO(endIso).setZone(zone);
+  return `${start.toFormat('h:mm a')} - ${end.toFormat('h:mm a')}`;
+};
+---
+
+<Layout
+  title="Events - Woodstock Farina | Pop-Ups and Appearances"
+  description="Find Woodstock Farina's upcoming wood-fired pizza pop-ups and appearances across Ventura County."
+>
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-heading font-bold mb-4">Events</h1>
+      <p class="text-xl text-wood-100 max-w-2xl mx-auto">
+        Come find us. Pop-ups, markets and appearances across Ventura County.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        {events.length > 0 && (
+          <div class="space-y-8">
+            {events.map((event) => (
+              <article class="bg-wood-50 rounded-lg overflow-hidden shadow-lg flex flex-col md:flex-row">
+                {event.imageUrl && (
+                  <img
+                    src={event.imageUrl}
+                    alt={event.title}
+                    loading="lazy"
+                    class="h-56 w-full md:h-auto md:w-72 object-cover shrink-0"
+                  />
+                )}
+                <div class="p-6 md:p-8">
+                  <div class="text-fire-600 font-semibold mb-2">
+                    {formatDate(event.start)}
+                  </div>
+                  <h2 class="text-2xl font-heading font-bold text-wood-900 mb-2">
+                    {event.title}
+                  </h2>
+                  <p class="text-wood-700 font-medium mb-1">
+                    {formatRange(event.start, event.end)}
+                  </p>
+                  {event.location && (
+                    <p class="text-wood-500 mb-4">{event.location}</p>
+                  )}
+                  {event.description && (
+                    <p class="text-wood-600 leading-relaxed">{event.description}</p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {events.length === 0 && (
+          <div class="text-center py-12">
+            <h2 class="text-3xl font-heading font-bold text-wood-900 mb-4">
+              {loadFailed ? 'Events are unavailable right now' : 'No events scheduled just yet'}
+            </h2>
+            <p class="text-lg text-wood-600 max-w-xl mx-auto mb-8">
+              {loadFailed
+                ? 'We are having trouble loading our schedule. Please try again shortly, or get in touch and we will let you know what is coming up.'
+                : 'We are busy catering private events. Check back soon, or book us for your own celebration.'}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/booking"
+                class="inline-block bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105"
+              >
+                Book Your Event
+              </a>
+              <a
+                href="/contact"
+                class="inline-block bg-white border-2 border-fire-600 text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-50 transition-all transform hover:scale-105"
+              >
+                Get In Touch
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gradient-to-br from-fire-600 to-fire-700 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+        Want Us at Your Event?
+      </h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">
+        We cater weddings, parties and corporate events across Ventura County.
+      </p>
+      <a
+        href="/booking"
+        class="inline-block bg-white text-fire-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-wood-50 transition-all transform hover:scale-105"
+      >
+        Check Availability
+      </a>
+    </div>
+  </section>
+</Layout>

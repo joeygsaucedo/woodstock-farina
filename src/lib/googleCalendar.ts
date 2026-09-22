@@ -3,7 +3,7 @@ import { CALENDAR_CONFIG, hasCalendarCredentials } from './bookingConfig';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 
-const getCalendarClient = (): calendar_v3.Calendar | null => {
+export const getCalendarClient = (): calendar_v3.Calendar | null => {
   if (!hasCalendarCredentials()) {
     return null;
   }
