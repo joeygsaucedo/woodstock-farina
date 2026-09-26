@@ -1,6 +1,16 @@
 {
   "framework": "astro",
   "buildCommand": "npm run build",
+  "redirects": [
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/services", "destination": "/menu", "permanent": true },
+    { "source": "/photo-gallery", "destination": "/gallery", "permanent": true },
+    { "source": "/events/:slug+", "destination": "/events", "permanent": true },
+    { "source": "/availability", "destination": "/booking", "permanent": true },
+    { "source": "/availability/:slug+", "destination": "/booking", "permanent": true },
+    { "source": "/survey", "destination": "/contact", "permanent": true },
+    { "source": "/changeorder", "destination": "/contact", "permanent": true }
+  ],
   "crons": [
     {
       "path": "/api/cron/cleanup-events",
