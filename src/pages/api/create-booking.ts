@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
-import { DateTime } from 'luxon';
-import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../../lib/bookingConfig';
+import { CALENDAR_CONFIG } from '../../lib/bookingConfig';
+import { validateEventWindow } from '../../lib/bookingRules';
 import { checkRangeAvailability, createBookingEvent } from '../../lib/googleCalendar';
 import {
   EMAIL_CONFIG,
@@ -26,7 +26,6 @@ const requiredFields = [
   'event-time',
   'event-type',
   'guest-count',
-  'venue-location',
   'package',
   'full-name',
   'email',
@@ -109,23 +108,22 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  const eventDate = String(payload['event-date']);
-  const eventTime = String(payload['event-time']);
-  const durationHours = Number(payload.durationHours ?? BOOKING_POLICIES.defaultDurationHours);
-
-  const localStart = DateTime.fromISO(`${eventDate}T${eventTime}`, {
-    zone: CALENDAR_CONFIG.timezone,
-  });
-  if (!localStart.isValid) {
-    return json({ success: false, message: 'Invalid event date or time.' }, 400);
+  const eventWindow = validateEventWindow(String(payload['event-date']), String(payload['event-time']));
+  if (!eventWindow.ok) {
+    return json({ success: false, message: eventWindow.message }, 400);
   }
 
+  const { localStart, localEnd } = eventWindow;
+
+  // Venue is optional; a blank one means the guest has not picked a location yet.
+  const venueProvided = String(payload['venue-location'] ?? '').trim();
+  const venueLocation = venueProvided || 'TBD';
   const start = localStart.toUTC().toJSDate();
-  const end = localStart.plus({ hours: durationHours }).toUTC().toJSDate();
+  const end = localEnd.toUTC().toJSDate();
 
   // Matches check-availability: a booking reserves every calendar day it touches.
   const dayStart = localStart.startOf('day').toUTC().toJSDate();
-  const dayEnd = localStart.plus({ hours: durationHours }).endOf('day').toUTC().toJSDate();
+  const dayEnd = localEnd.endOf('day').toUTC().toJSDate();
 
   try {
     const availability = await checkRangeAvailability(dayStart, dayEnd);
@@ -148,7 +146,7 @@ export const POST: APIRoute = async ({ request }) => {
       phone: String(payload.phone),
       eventType: String(payload['event-type']),
       guestCount: Number(payload['guest-count']),
-      venueLocation: String(payload['venue-location']),
+      venueLocation,
       packageName: String(payload.package),
       preferredContact: String(payload['preferred-contact'] ?? 'email'),
       additionalNotes: String(payload['additional-notes'] ?? ''),
@@ -166,12 +164,10 @@ export const POST: APIRoute = async ({ request }) => {
     const guestPhone = String(payload.phone);
     const eventType = String(payload['event-type']);
     const guestCount = String(payload['guest-count']);
-    const venueLocation = String(payload['venue-location']);
     const packageName = String(payload.package);
     const preferredContact = String(payload['preferred-contact'] ?? 'email');
     const additionalNotes = String(payload['additional-notes'] ?? '');
 
-    const localEnd = localStart.plus({ hours: durationHours });
     const formattedDate = localStart.toFormat('EEEE, LLLL d, yyyy');
     const formattedTimeRange = `${localStart.toFormat('h:mm a')} - ${localEnd.toFormat('h:mm a')} (${CALENDAR_CONFIG.timezone})`;
 
@@ -194,7 +190,7 @@ export const POST: APIRoute = async ({ request }) => {
       `Date: ${formattedDate}`,
       `Time: ${formattedTimeRange}`,
       `Guest Count: ${guestCount}`,
-      `Venue/Location: ${venueLocation}${payload['venue-location-id'] ? ' (verified address)' : ' (typed by guest, not verified)'}`,
+      `Venue/Location: ${venueLocation}${!venueProvided ? ' (left blank by guest)' : payload['venue-location-id'] ? ' (verified address)' : ' (typed by guest, not verified)'}`,
       `Package: ${packageName}`,
       `Dietary: ${dietaryText}`,
       '',

@@ -167,14 +167,13 @@ const packages = [
 
               <div class="mt-6 relative">
                 <label for="venue-location" class="block text-wood-700 font-medium mb-2">
-                  Venue/Location *
+                  Venue/Location
                 </label>
                 <input
                   type="text"
                   id="venue-location"
                   name="venue-location"
-                  required
-                  placeholder="Venue name and city, or TBD"
+                  placeholder="Venue name and city"
                   autocomplete="off"
                   class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent"
                 />
@@ -187,7 +186,7 @@ const packages = [
                 ></ul>
                 <p class="text-xs text-wood-500 mt-2">
                   Start typing to pick a suggested address, or just type the venue name. Not settled on a
-                  location yet? Enter &ldquo;TBD&rdquo; and we will sort it out together.
+                  location yet? Leave it blank and we will sort it out together.
                 </p>
               </div>
 
@@ -200,7 +199,7 @@ const packages = [
                   Check Availability
                 </button>
                 <p class="text-sm text-wood-600">
-                  Check date and time before submitting your booking request.
+                  See right away if your date is open. We book one event per day.
                 </p>
               </div>
 
@@ -617,21 +616,16 @@ const packages = [
   const getAvailabilityPayload = () => {
     const date = (document.getElementById('event-date') as HTMLInputElement | null)?.value ?? '';
     const time = (document.getElementById('event-time') as HTMLSelectElement | null)?.value ?? '';
-    const guestCount = (document.getElementById('guest-count') as HTMLInputElement | null)?.value ?? '';
-    const venueLocation = (document.getElementById('venue-location') as HTMLInputElement | null)?.value ?? '';
 
     return {
       eventDate: date,
       eventTime: time,
-      guestCount,
-      venueLocation,
-      durationHours: 5,
     };
   };
 
   const buildSignature = () => {
     const payload = getAvailabilityPayload();
-    return `${payload.eventDate}|${payload.eventTime}|${payload.guestCount}|${payload.venueLocation}`;
+    return `${payload.eventDate}|${payload.eventTime}`;
   };
 
   const isAvailabilityCurrent = () =>
@@ -793,11 +787,6 @@ const packages = [
       invalidateVenueSelection();
     }
 
-    if (availabilityState.checked) {
-      invalidateAvailability();
-      setStatus('Event details changed. Please re-check availability.', 'info');
-    }
-
     if (locationQueryTimer) {
       window.clearTimeout(locationQueryTimer);
     }
@@ -841,7 +830,7 @@ const packages = [
     }
   });
 
-  const availabilityFieldIds = ['event-date', 'event-time', 'guest-count', 'venue-location'];
+  const availabilityFieldIds = ['event-date', 'event-time'];
   availabilityFieldIds.forEach((id) => {
     const field = document.getElementById(id);
     field?.addEventListener('change', () => {
@@ -870,8 +859,8 @@ const packages = [
   const checkAvailability = async () => {
     const payload = getAvailabilityPayload();
 
-    if (!payload.eventDate || !payload.eventTime || !payload.guestCount || !payload.venueLocation) {
-      setStatus('Add date, time, guest count, and venue before checking availability.', 'error');
+    if (!payload.eventDate || !payload.eventTime) {
+      setStatus('Add a date and start time before checking availability.', 'error');
       showAvailabilityError();
       return;
     }
@@ -945,7 +934,6 @@ const packages = [
     data['dietary-vegetarian'] = formData.has('dietary-vegetarian');
     data['dietary-vegan'] = formData.has('dietary-vegan');
     data['dietary-gluten-free'] = formData.has('dietary-gluten-free');
-    data.durationHours = 5;
 
     if (submitButton) {
       submitButton.disabled = true;

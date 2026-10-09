@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
-import { DateTime } from 'luxon';
-import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../../lib/bookingConfig';
+import { validateEventWindow } from '../../lib/bookingRules';
 import { checkRangeAvailability } from '../../lib/googleCalendar';
 
 export const prerender = false;
@@ -28,59 +27,22 @@ export const POST: APIRoute = async ({ request }) => {
     return badRequest('Invalid JSON body.');
   }
 
-  const eventDate = String(body.eventDate ?? '');
-  const eventTime = String(body.eventTime ?? '');
-  const durationHours = Number(body.durationHours ?? BOOKING_POLICIES.defaultDurationHours);
+  const eventWindow = validateEventWindow(String(body.eventDate ?? ''), String(body.eventTime ?? ''));
+  if (!eventWindow.ok) {
+    if (eventWindow.reason === 'invalid') {
+      return badRequest(eventWindow.message);
+    }
 
-  if (!eventDate || !eventTime) {
-    return badRequest('Event date and start time are required.');
-  }
-
-  const localStart = DateTime.fromISO(`${eventDate}T${eventTime}`, {
-    zone: CALENDAR_CONFIG.timezone,
-  });
-  if (!localStart.isValid) {
-    return badRequest('Invalid date or time format.');
-  }
-
-  const nowLocal = DateTime.now().setZone(CALENDAR_CONFIG.timezone);
-  if (localStart <= nowLocal) {
-    return badRequest('Please choose a future date and time.');
-  }
-
-  const earliestDate = nowLocal.startOf('day').plus({ days: BOOKING_POLICIES.minNoticeDays });
-
-  if (localStart < earliestDate) {
-    return new Response(
-      JSON.stringify({
-        available: false,
-        message: `We require at least ${BOOKING_POLICIES.minNoticeDays} days notice for new events.`,
-      }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-  }
-
-  const startHour = localStart.hour;
-  if (startHour < BOOKING_POLICIES.serviceStartHour || startHour >= BOOKING_POLICIES.serviceEndHour) {
-    return new Response(
-      JSON.stringify({
-        available: false,
-        message: `Service start times must be between ${BOOKING_POLICIES.serviceStartHour}:00 and ${BOOKING_POLICIES.serviceEndHour - 1}:59.`,
-      }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    return new Response(JSON.stringify({ available: false, message: eventWindow.message }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   // A booking reserves the whole day, so availability is checked against every
   // calendar day the event touches rather than just the service window. A late
   // start can push the end past midnight, which blocks the following day too.
-  const localEnd = localStart.plus({ hours: durationHours });
+  const { localStart, localEnd } = eventWindow;
   const dayStart = localStart.startOf('day').toUTC().toJSDate();
   const dayEnd = localEnd.endOf('day').toUTC().toJSDate();
 
