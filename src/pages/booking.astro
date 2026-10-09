@@ -1,5 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { BOOKING_POLICIES, CALENDAR_CONFIG } from '../lib/bookingConfig';
+
+// Only offer start times the availability check will accept, in 30 minute steps.
+const startTimeOptions: { value: string; label: string }[] = [];
+for (let hour = BOOKING_POLICIES.serviceStartHour; hour < BOOKING_POLICIES.serviceEndHour; hour++) {
+  for (const minute of [0, 30]) {
+    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+    startTimeOptions.push({
+      value: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
+      label: `${displayHour}:${String(minute).padStart(2, '0')} ${hour < 12 ? 'AM' : 'PM'}`,
+    });
+  }
+}
 
 const packages = [
   {
@@ -88,7 +101,8 @@ const packages = [
                     id="event-date"
                     name="event-date"
                     required
-                    min={new Date().toISOString().split('T')[0]}
+                    data-min-notice-days={BOOKING_POLICIES.minNoticeDays}
+                    data-timezone={CALENDAR_CONFIG.timezone}
                     class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent"
                   />
                 </div>
@@ -97,13 +111,17 @@ const packages = [
                   <label for="event-time" class="block text-wood-700 font-medium mb-2">
                     Start Time *
                   </label>
-                  <input
-                    type="time"
+                  <select
                     id="event-time"
                     name="event-time"
                     required
                     class="w-full px-4 py-3 border border-wood-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-fire-600 focus:border-transparent"
-                  />
+                  >
+                    <option value="">Select start time</option>
+                    {startTimeOptions.map((option) => (
+                      <option value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -370,10 +388,10 @@ const packages = [
               <button
                 type="submit"
                 id="submit-booking-btn"
-                disabled
+                formnovalidate
                 class="w-full bg-fire-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-fire-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                Submit Booking Request
+                Check Availability
               </button>
 
               <div
@@ -546,6 +564,7 @@ const packages = [
   const submitButton = document.getElementById('submit-booking-btn') as HTMLButtonElement | null;
   const statusBox = document.getElementById('booking-status') as HTMLDivElement | null;
   const statusBoxBottom = document.getElementById('booking-status-bottom') as HTMLDivElement | null;
+  const dateInput = document.getElementById('event-date') as HTMLInputElement | null;
   const venueInput = document.getElementById('venue-location') as HTMLInputElement | null;
   const venueLocationIdInput = document.getElementById('venue-location-id') as HTMLInputElement | null;
   const venueLocationLabelInput = document.getElementById('venue-location-label') as HTMLInputElement | null;
@@ -597,7 +616,7 @@ const packages = [
 
   const getAvailabilityPayload = () => {
     const date = (document.getElementById('event-date') as HTMLInputElement | null)?.value ?? '';
-    const time = (document.getElementById('event-time') as HTMLInputElement | null)?.value ?? '';
+    const time = (document.getElementById('event-time') as HTMLSelectElement | null)?.value ?? '';
     const guestCount = (document.getElementById('guest-count') as HTMLInputElement | null)?.value ?? '';
     const venueLocation = (document.getElementById('venue-location') as HTMLInputElement | null)?.value ?? '';
 
@@ -615,13 +634,24 @@ const packages = [
     return `${payload.eventDate}|${payload.eventTime}|${payload.guestCount}|${payload.venueLocation}`;
   };
 
+  const isAvailabilityCurrent = () =>
+    availabilityState.available && availabilityState.signature === buildSignature();
+
+  // The bottom button doubles as "Check Availability" until the current details are confirmed.
+  // Skip native required-field validation while it is only checking availability.
+  const updateSubmitButtonLabel = () => {
+    if (submitButton) {
+      const current = isAvailabilityCurrent();
+      submitButton.textContent = current ? 'Submit Booking Request' : 'Check Availability';
+      submitButton.formNoValidate = !current;
+    }
+  };
+
   const invalidateAvailability = () => {
     availabilityState.checked = false;
     availabilityState.available = false;
     availabilityState.signature = '';
-    if (submitButton) {
-      submitButton.disabled = true;
-    }
+    updateSubmitButtonLabel();
   };
 
   const hideVenueSuggestions = () => {
@@ -811,8 +841,8 @@ const packages = [
     }
   });
 
-  const watchFields = ['event-date', 'event-time', 'guest-count', 'venue-location'];
-  watchFields.forEach((id) => {
+  const availabilityFieldIds = ['event-date', 'event-time', 'guest-count', 'venue-location'];
+  availabilityFieldIds.forEach((id) => {
     const field = document.getElementById(id);
     field?.addEventListener('change', () => {
       if (availabilityState.checked) {
@@ -822,16 +852,43 @@ const packages = [
     });
   });
 
-  availabilityButton?.addEventListener('click', async () => {
+  // Bring the event details back into view so users who jumped to the bottom can fix them.
+  const showAvailabilityError = () => {
+    const firstMissing = availabilityFieldIds
+      .map((id) => document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null)
+      .find((field) => field && !field.value);
+
+    if (firstMissing) {
+      firstMissing.reportValidity();
+      firstMissing.focus();
+      return;
+    }
+
+    statusBox?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const checkAvailability = async () => {
     const payload = getAvailabilityPayload();
 
     if (!payload.eventDate || !payload.eventTime || !payload.guestCount || !payload.venueLocation) {
       setStatus('Add date, time, guest count, and venue before checking availability.', 'error');
+      showAvailabilityError();
       return;
     }
 
-    availabilityButton.disabled = true;
-    availabilityButton.textContent = 'Checking...';
+    // Typing a date by hand can get around the picker's minimum.
+    if (dateInput?.validity.rangeUnderflow) {
+      setStatus(`We require at least ${dateInput.dataset.minNoticeDays} days notice for new events.`, 'error');
+      dateInput.reportValidity();
+      dateInput.focus();
+      return;
+    }
+
+    const buttons = [availabilityButton, submitButton].filter(Boolean) as HTMLButtonElement[];
+    buttons.forEach((button) => {
+      button.disabled = true;
+      button.textContent = 'Checking...';
+    });
 
     try {
       const response = await fetch('/api/check-availability', {
@@ -847,32 +904,35 @@ const packages = [
         availabilityState.checked = true;
         availabilityState.available = true;
         availabilityState.signature = buildSignature();
-        if (submitButton) {
-          submitButton.disabled = false;
-        }
         setStatus(result.message ?? 'Date is available for booking.', 'success');
       } else {
         invalidateAvailability();
         setStatus(result.message ?? 'Date is unavailable. Please choose another time.', 'error');
+        showAvailabilityError();
       }
     } catch (error) {
       console.error('Availability check failed:', error);
       invalidateAvailability();
       setStatus('Unable to check availability right now. Please try again.', 'error');
+      showAvailabilityError();
     } finally {
-      availabilityButton.disabled = false;
-      availabilityButton.textContent = 'Check Availability';
+      buttons.forEach((button) => {
+        button.disabled = false;
+      });
+      if (availabilityButton) {
+        availabilityButton.textContent = 'Check Availability';
+      }
+      updateSubmitButtonLabel();
     }
-  });
+  };
+
+  availabilityButton?.addEventListener('click', checkAvailability);
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    if (!availabilityState.available || availabilityState.signature !== buildSignature()) {
-      setStatus('Please check availability with your latest event details before submitting.', 'error');
-      if (submitButton) {
-        submitButton.disabled = true;
-      }
+    if (!isAvailabilityCurrent()) {
+      await checkAvailability();
       return;
     }
 
@@ -908,13 +968,6 @@ const packages = [
 
       if (!response.ok || !result.success) {
         setStatus(result.message ?? 'Booking request failed. Please try again.', 'error');
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = 'Submit Booking Request';
-        }
-        if (availabilityButton) {
-          availabilityButton.disabled = false;
-        }
         return;
       }
 
@@ -928,19 +981,21 @@ const packages = [
       setStatus('Something went wrong while submitting your request. Please try again.', 'error');
     } finally {
       if (submitButton) {
-        submitButton.textContent = 'Submit Booking Request';
+        submitButton.disabled = false;
       }
+      updateSubmitButtonLabel();
       if (availabilityButton) {
         availabilityButton.disabled = false;
       }
     }
   });
 
-  // Set minimum date to tomorrow
-  const dateInput = document.getElementById('event-date') as HTMLInputElement;
+  // Match the availability check's notice window, counted from today in the business timezone.
   if (dateInput) {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    dateInput.min = tomorrow.toISOString().split('T')[0];
+    const minNoticeDays = Number(dateInput.dataset.minNoticeDays ?? 7);
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: dateInput.dataset.timezone }).format(new Date());
+    const earliest = new Date(`${today}T00:00:00Z`);
+    earliest.setUTCDate(earliest.getUTCDate() + minNoticeDays);
+    dateInput.min = earliest.toISOString().split('T')[0];
   }
 </script>
