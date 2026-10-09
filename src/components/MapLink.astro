@@ -1,0 +1,42 @@
+---
+interface Props {
+  location: string;
+  class?: string;
+}
+
+const { location, class: className = '' } = Astro.props;
+
+// Google Maps works everywhere, so it is the href until the script below swaps
+// in the phone's own maps app. It also covers visitors without JavaScript.
+const googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+---
+
+<a
+  href={googleUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-map-query={location}
+  class={`inline-flex items-start gap-1.5 hover:text-fire-600 hover:underline transition-colors ${className}`}
+>
+  <svg class="w-4 h-4 mt-[0.2em] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-6.2-7-11.5a7 7 0 1 1 14 0C19 14.8 12 21 12 21Z" />
+    <circle cx="12" cy="9.5" r="2.5" />
+  </svg>
+  <span>{location}</span>
+</a>
+
+<script>
+  // iPadOS reports itself as a Mac, so a touch-capable "Mac" is an iPad.
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(ua);
+
+  if (isIOS || isAndroid) {
+    document.querySelectorAll<HTMLAnchorElement>('a[data-map-query]').forEach((link) => {
+      const query = encodeURIComponent(link.dataset.mapQuery ?? '');
+      // geo: hands off to whichever maps app the Android user has set as default.
+      link.href = isIOS ? `https://maps.apple.com/?q=${query}` : `geo:0,0?q=${query}`;
+      link.removeAttribute('target');
+    });
+  }
+</script>

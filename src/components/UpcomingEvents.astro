@@ -2,6 +2,7 @@
 import { DateTime } from 'luxon';
 import { listUpcomingEvents, hasEventsCalendar, type SiteEvent } from '../lib/events';
 import { CALENDAR_CONFIG } from '../lib/bookingConfig';
+import MapLink from './MapLink.astro';
 
 interface Props {
   limit?: number;
@@ -75,7 +76,7 @@ const sectionBg = background === 'wood' ? 'bg-wood-50' : 'bg-white';
                 {event.title}
               </h3>
               {event.location && (
-                <p class="text-sm text-wood-500 mb-3">{event.location}</p>
+                <p class="text-sm text-wood-500 mb-3"><MapLink location={event.location} /></p>
               )}
               {event.description && (
                 <p class="text-wood-600 grow">{event.description}</p>

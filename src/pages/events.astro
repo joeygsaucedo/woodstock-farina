@@ -1,6 +1,7 @@
 ---
 import { DateTime } from 'luxon';
 import Layout from '../layouts/Layout.astro';
+import MapLink from '../components/MapLink.astro';
 import { listUpcomingEvents, hasEventsCalendar, type SiteEvent } from '../lib/events';
 import { CALENDAR_CONFIG } from '../lib/bookingConfig';
 
@@ -74,7 +75,7 @@ const formatRange = (startIso: string, endIso: string) => {
                     {formatRange(event.start, event.end)}
                   </p>
                   {event.location && (
-                    <p class="text-wood-500 mb-4">{event.location}</p>
+                    <p class="text-wood-500 mb-4"><MapLink location={event.location} /></p>
                   )}
                   {event.description && (
                     <p class="text-wood-600 leading-relaxed">{event.description}</p>
