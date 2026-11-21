@@ -1,87 +1,33 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { GALLERY_CATEGORIES, getGalleryPhotos, photoSrc, type GalleryPhoto } from '../lib/googlePhotos';
 
-const eventPhotos = [
-  {
-    title: "Elegant Wedding Reception",
-    type: "Wedding",
-    description: "Outdoor wedding with 120 guests in Ventura",
-    image: "/images/events/wedding-1.jpg"
-  },
-  {
-    title: "Corporate Team Building",
-    type: "Corporate",
-    description: "Tech company event in Thousand Oaks",
-    image: "/images/events/corporate-1.jpg"
-  },
-  {
-    title: "Birthday Celebration",
-    type: "Private Party",
-    description: "50th birthday party in Camarillo",
-    image: "/images/events/party-1.jpg"
-  },
-  {
-    title: "Garden Wedding",
-    type: "Wedding",
-    description: "Intimate garden wedding in Oxnard",
-    image: "/images/events/wedding-2.jpg"
-  },
-  {
-    title: "Graduation Party",
-    type: "Private Party",
-    description: "High school graduation celebration",
-    image: "/images/events/party-2.jpg"
-  },
-  {
-    title: "Company Holiday Party",
-    type: "Corporate",
-    description: "Annual holiday celebration for 80 employees",
-    image: "/images/events/corporate-2.jpg"
-  },
-  {
-    title: "Backyard BBQ Wedding",
-    type: "Wedding",
-    description: "Casual backyard wedding in Ventura",
-    image: "/images/events/wedding-3.jpg"
-  },
-  {
-    title: "Nonprofit Fundraiser",
-    type: "Corporate",
-    description: "Community fundraising event",
-    image: "/images/events/corporate-3.jpg"
-  },
-  {
-    title: "Anniversary Party",
-    type: "Private Party",
-    description: "25th wedding anniversary celebration",
-    image: "/images/events/party-3.jpg"
-  },
-  {
-    title: "Beach Wedding",
-    type: "Wedding",
-    description: "Beachside wedding reception in Ventura",
-    image: "/images/events/wedding-4.jpg"
-  },
-  {
-    title: "Product Launch Event",
-    type: "Corporate",
-    description: "Startup product launch party",
-    image: "/images/events/corporate-4.jpg"
-  },
-  {
-    title: "Family Reunion",
-    type: "Private Party",
-    description: "Multi-generational family gathering",
-    image: "/images/events/party-4.jpg"
+export const prerender = false;
+
+// Photos come live from the owner's Google Photos albums. Cache at the CDN for
+// an hour so album changes show up within the hour without each visit
+// re-reading Google.
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const allPhotos = await getGalleryPhotos();
+
+// Only offer filters for categories that actually have photos.
+const categories = GALLERY_CATEGORIES.filter((c) => allPhotos.some((p) => p.category === c.id));
+const labelFor = new Map(GALLERY_CATEGORIES.map((c) => [c.id, c.label]));
+
+// Interleave the albums so "All" shows a mix rather than one album after another.
+const byCategory = categories.map((c) => allPhotos.filter((p) => p.category === c.id));
+const photos: GalleryPhoto[] = [];
+for (let i = 0; byCategory.some((list) => i < list.length); i++) {
+  for (const list of byCategory) {
+    if (list[i]) photos.push(list[i]);
   }
-];
-
-const categories = ["All", "Wedding", "Corporate", "Private Party"];
+}
 ---
 
 <Layout
   title="Gallery - Woodstock Farina | Event Photos"
-  description="Browse our gallery of wood-fired pizza catering events across Ventura County. Weddings, corporate events, and private celebrations."
+  description="Browse photos of Woodstock Farina's wood-fired pizza catering across Ventura County: weddings, corporate events and festivals, celebrations, backyard gatherings, and more."
 >
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-wood-800 to-wood-900 text-white py-20">
@@ -96,57 +42,68 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
   </section>
 
   <!-- Filter Buttons -->
-  <section class="py-8 bg-wood-50 border-b border-wood-200 sticky top-20 z-40">
+  <section class="py-6 bg-wood-50 border-b border-wood-200 sticky top-20 z-40">
     <div class="container mx-auto px-4">
       <div class="flex flex-wrap justify-center gap-3">
-        {categories.map(category => (
+        <button
+          type="button"
+          class="category-filter px-5 py-2 rounded-full font-semibold transition-all hover:scale-105"
+          data-category="all"
+          aria-pressed="true"
+        >
+          All
+        </button>
+        {categories.map((category) => (
           <button
-            class="category-filter px-6 py-2 rounded-full font-semibold transition-all hover:scale-105"
-            data-category={category}
+            type="button"
+            class="category-filter px-5 py-2 rounded-full font-semibold transition-all hover:scale-105"
+            data-category={category.id}
+            data-blurb={category.blurb}
+            aria-pressed="false"
           >
-            {category}
+            {category.label}
           </button>
         ))}
       </div>
+      <p id="category-blurb" class="mt-3 text-center text-wood-600 min-h-[1.5rem]" aria-live="polite"></p>
     </div>
   </section>
 
   <!-- Gallery Grid -->
-  <section class="py-20 bg-white">
+  <section class="py-12 md:py-16 bg-white">
     <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="gallery-grid">
-        {eventPhotos.map(photo => (
-          <div
-            class="gallery-item bg-wood-50 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-pointer"
-            data-type={photo.type}
-            data-image={photo.image}
-            data-title={photo.title}
-            data-description={photo.description}
-            tabindex="0"
-            role="button"
-            aria-label={`Open photo: ${photo.title}`}
-          >
-            <img
-              src={photo.image}
-              alt={photo.title}
-              class="h-80 w-full object-cover"
-            />
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-xl font-heading font-bold text-wood-900">
-                  {photo.title}
-                </h3>
-                <span class="text-xs bg-fire-100 text-fire-800 px-3 py-1 rounded-full font-semibold">
-                  {photo.type}
-                </span>
-              </div>
-              <p class="text-wood-600">
-                {photo.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+      {photos.length === 0 ? (
+        <p class="text-center text-wood-600 text-lg py-12">
+          Photos are on their way. Check back soon!
+        </p>
+      ) : (
+        <div class="columns-1 sm:columns-2 lg:columns-3 gap-4" id="gallery-grid">
+          {photos.map((photo, index) => (
+            <button
+              type="button"
+              class="gallery-item group mb-4 block w-full break-inside-avoid overflow-hidden rounded-lg bg-wood-100 shadow-md hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-fire-400"
+              data-category={photo.category}
+              data-image={photo.baseUrl}
+              data-sizable={photo.width ? 'true' : undefined}
+              data-label={labelFor.get(photo.category)}
+              aria-label={`Open ${labelFor.get(photo.category)} photo`}
+            >
+              <img
+                src={photoSrc(photo, 800)}
+                srcset={photo.width ? `${photoSrc(photo, 500)} 500w, ${photoSrc(photo, 800)} 800w, ${photoSrc(photo, 1200)} 1200w` : undefined}
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                width={photo.width || undefined}
+                height={photo.height || undefined}
+                alt={`${labelFor.get(photo.category)} catering by Woodstock Farina`}
+                loading={index < 6 ? 'eager' : 'lazy'}
+                decoding="async"
+                referrerpolicy="no-referrer"
+                class="block h-auto w-full transition-transform duration-500 group-hover:scale-105"
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
@@ -160,7 +117,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
     <button
       id="lightbox-close"
       type="button"
-      class="absolute right-4 top-4 md:right-8 md:top-8 text-white/90 hover:text-white text-3xl leading-none"
+      class="absolute right-4 top-4 md:right-8 md:top-8 z-10 text-white/90 hover:text-white text-3xl leading-none"
       aria-label="Close photo viewer"
     >
       &times;
@@ -169,7 +126,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
     <button
       id="lightbox-prev"
       type="button"
-      class="absolute left-2 top-1/2 -translate-y-1/2 md:left-6 text-white/90 hover:text-white text-4xl px-3 py-2"
+      class="absolute left-2 top-1/2 -translate-y-1/2 md:left-6 z-10 text-white/90 hover:text-white text-4xl px-3 py-2"
       aria-label="Previous photo"
     >
       &#10094;
@@ -178,7 +135,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
     <button
       id="lightbox-next"
       type="button"
-      class="absolute right-2 top-1/2 -translate-y-1/2 md:right-6 text-white/90 hover:text-white text-4xl px-3 py-2"
+      class="absolute right-2 top-1/2 -translate-y-1/2 md:right-6 z-10 text-white/90 hover:text-white text-4xl px-3 py-2"
       aria-label="Next photo"
     >
       &#10095;
@@ -190,12 +147,13 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
           id="lightbox-image"
           src=""
           alt=""
-          class="max-h-[75vh] w-full rounded-lg object-contain"
+          referrerpolicy="no-referrer"
+          class="max-h-[80vh] w-full rounded-lg object-contain"
         />
-        <div class="mt-4 text-center text-white">
-          <h3 id="lightbox-title" class="text-2xl font-heading font-bold"></h3>
-          <p id="lightbox-description" class="mt-2 text-white/80"></p>
-        </div>
+        <p class="mt-4 text-center text-white/80">
+          <span id="lightbox-label" class="font-heading font-bold text-white"></span>
+          <span id="lightbox-counter" class="ml-2 text-sm"></span>
+        </p>
       </div>
     </div>
   </div>
@@ -342,120 +300,140 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
 </Layout>
 
 <script>
-  const filterButtons = document.querySelectorAll('.category-filter');
-  const galleryItems = Array.from(document.querySelectorAll('.gallery-item')) as HTMLElement[];
+  const filterButtons = Array.from(document.querySelectorAll('.category-filter')) as HTMLButtonElement[];
+  const galleryItems = Array.from(document.querySelectorAll('.gallery-item')) as HTMLButtonElement[];
+  const blurb = document.getElementById('category-blurb');
 
   const lightbox = document.getElementById('gallery-lightbox') as HTMLDivElement | null;
   const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement | null;
-  const lightboxTitle = document.getElementById('lightbox-title') as HTMLHeadingElement | null;
-  const lightboxDescription = document.getElementById('lightbox-description') as HTMLParagraphElement | null;
+  const lightboxLabel = document.getElementById('lightbox-label');
+  const lightboxCounter = document.getElementById('lightbox-counter');
   const lightboxClose = document.getElementById('lightbox-close') as HTMLButtonElement | null;
   const lightboxPrev = document.getElementById('lightbox-prev') as HTMLButtonElement | null;
   const lightboxNext = document.getElementById('lightbox-next') as HTMLButtonElement | null;
   const lightboxContent = document.getElementById('lightbox-content') as HTMLDivElement | null;
 
-  let currentLightboxIndex = -1;
+  const ACTIVE = ['bg-fire-600', 'text-white'];
+  const INACTIVE = ['bg-white', 'text-wood-700', 'hover:bg-wood-100'];
 
-  const getVisibleGalleryItems = () => {
-    const visible = galleryItems.filter((item) => item.style.display !== 'none');
-    return visible.length ? visible : galleryItems;
+  let currentLightboxIndex = -1;
+  let lastFocused: HTMLElement | null = null;
+
+  const getVisibleGalleryItems = () => galleryItems.filter((item) => !item.hidden);
+
+  // Google serves any width on request: ask for one that fills this screen
+  // (rounded up to a step so the browser cache is shared across opens).
+  const fullSizeUrl = (item: HTMLElement) => {
+    const base = item.dataset.image ?? '';
+    if (!item.dataset.sizable) return base;
+    const needed = Math.min(window.innerWidth, 1280) * Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.min(2400, Math.ceil(needed / 400) * 400);
+    return `${base}=w${width}`;
+  };
+
+  // The grid has already downloaded a smaller copy; show it at once.
+  const thumbnailUrl = (item: HTMLElement) => item.querySelector('img')?.currentSrc ?? '';
+
+  const loaded = new Set<string>();
+  const preload = (url: string) => {
+    if (!url || loaded.has(url)) return;
+    const img = new Image();
+    img.referrerPolicy = 'no-referrer';
+    img.onload = () => loaded.add(url);
+    img.src = url;
   };
 
   const renderLightbox = (index: number) => {
     const visibleItems = getVisibleGalleryItems();
-    const boundedIndex = (index + visibleItems.length) % visibleItems.length;
-    const item = visibleItems[boundedIndex];
+    if (!visibleItems.length || !lightboxImage) return;
 
-    if (!item || !lightboxImage || !lightboxTitle || !lightboxDescription) {
-      return;
+    const count = visibleItems.length;
+    const boundedIndex = (index + count) % count;
+    const item = visibleItems[boundedIndex];
+    currentLightboxIndex = boundedIndex;
+
+    const full = fullSizeUrl(item);
+    if (loaded.has(full)) {
+      lightboxImage.src = full;
+    } else {
+      lightboxImage.src = thumbnailUrl(item) || full;
+      const hiRes = new Image();
+      hiRes.referrerPolicy = 'no-referrer';
+      hiRes.onload = () => {
+        loaded.add(full);
+        // Only swap if the visitor is still on this photo.
+        if (currentLightboxIndex === boundedIndex && getVisibleGalleryItems()[boundedIndex] === item) {
+          lightboxImage.src = full;
+        }
+      };
+      hiRes.src = full;
     }
 
-    currentLightboxIndex = boundedIndex;
-    lightboxImage.src = item.dataset.image ?? '';
-    lightboxImage.alt = item.dataset.title ?? 'Gallery photo';
-    lightboxTitle.textContent = item.dataset.title ?? '';
-    lightboxDescription.textContent = item.dataset.description ?? '';
+    // Warm up the neighbours so the arrows feel instant.
+    if (count > 1) {
+      preload(fullSizeUrl(visibleItems[(boundedIndex + 1) % count]));
+      preload(fullSizeUrl(visibleItems[(boundedIndex - 1 + count) % count]));
+    }
+
+    lightboxImage.alt = `${item.dataset.label ?? 'Gallery'} photo`;
+    if (lightboxLabel) lightboxLabel.textContent = item.dataset.label ?? '';
+    if (lightboxCounter) lightboxCounter.textContent = `${boundedIndex + 1} / ${visibleItems.length}`;
   };
 
   const openLightboxForItem = (item: HTMLElement) => {
-    const visibleItems = getVisibleGalleryItems();
-    const index = visibleItems.indexOf(item);
-    if (index < 0 || !lightbox) {
-      return;
-    }
+    const index = getVisibleGalleryItems().indexOf(item as HTMLButtonElement);
+    if (index < 0 || !lightbox) return;
 
+    lastFocused = item;
     renderLightbox(index);
     lightbox.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
+    lightboxClose?.focus();
   };
 
   const closeLightbox = () => {
-    if (!lightbox) {
-      return;
-    }
-
+    if (!lightbox) return;
     lightbox.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
     currentLightboxIndex = -1;
+    lastFocused?.focus();
   };
 
   const showPrev = () => {
-    if (currentLightboxIndex >= 0) {
-      renderLightbox(currentLightboxIndex - 1);
-    }
+    if (currentLightboxIndex >= 0) renderLightbox(currentLightboxIndex - 1);
   };
 
   const showNext = () => {
-    if (currentLightboxIndex >= 0) {
-      renderLightbox(currentLightboxIndex + 1);
-    }
+    if (currentLightboxIndex >= 0) renderLightbox(currentLightboxIndex + 1);
   };
 
-  filterButtons[0]?.classList.add('bg-fire-600', 'text-white');
-  filterButtons.forEach((btn, idx) => {
-    if (idx !== 0) {
-      btn.classList.add('bg-white', 'text-wood-700', 'hover:bg-wood-100');
-    }
-  });
+  const selectCategory = (button: HTMLButtonElement) => {
+    const category = button.dataset.category ?? 'all';
+
+    filterButtons.forEach((btn) => {
+      const active = btn === button;
+      btn.classList.remove(...(active ? INACTIVE : ACTIVE));
+      btn.classList.add(...(active ? ACTIVE : INACTIVE));
+      btn.setAttribute('aria-pressed', String(active));
+    });
+
+    if (blurb) blurb.textContent = button.dataset.blurb ?? '';
+
+    galleryItems.forEach((item) => {
+      item.hidden = category !== 'all' && item.dataset.category !== category;
+    });
+  };
 
   filterButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const category = (button as HTMLElement).dataset.category;
-
-      filterButtons.forEach((btn) => {
-        btn.classList.remove('bg-fire-600', 'text-white');
-        btn.classList.add('bg-white', 'text-wood-700', 'hover:bg-wood-100');
-      });
-      button.classList.remove('bg-white', 'text-wood-700', 'hover:bg-wood-100');
-      button.classList.add('bg-fire-600', 'text-white');
-
-      galleryItems.forEach((item) => {
-        if (category === 'All' || item.dataset.type === category) {
-          item.style.display = 'block';
-          setTimeout(() => {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
-          }, 10);
-        } else {
-          item.style.opacity = '0';
-          item.style.transform = 'scale(0.9)';
-          setTimeout(() => {
-            item.style.display = 'none';
-          }, 300);
-        }
-      });
-    });
+    button.addEventListener('click', () => selectCategory(button));
   });
+  if (filterButtons[0]) selectCategory(filterButtons[0]);
 
   galleryItems.forEach((item) => {
-    item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     item.addEventListener('click', () => openLightboxForItem(item));
-    item.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openLightboxForItem(item);
-      }
-    });
+    // Start the full-size download as soon as the visitor shows intent.
+    item.addEventListener('pointerenter', () => preload(fullSizeUrl(item)), { once: true });
+    item.addEventListener('focus', () => preload(fullSizeUrl(item)), { once: true });
   });
 
   lightboxClose?.addEventListener('click', closeLightbox);
@@ -463,9 +441,7 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
   lightboxNext?.addEventListener('click', showNext);
 
   lightbox?.addEventListener('click', (event) => {
-    if (event.target === lightbox) {
-      closeLightbox();
-    }
+    if (event.target === lightbox) closeLightbox();
   });
 
   lightboxContent?.addEventListener('click', (event) => {
@@ -473,18 +449,9 @@ const categories = ["All", "Wedding", "Corporate", "Private Party"];
   });
 
   document.addEventListener('keydown', (event) => {
-    if (!lightbox || lightbox.classList.contains('hidden')) {
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      closeLightbox();
-    }
-    if (event.key === 'ArrowLeft') {
-      showPrev();
-    }
-    if (event.key === 'ArrowRight') {
-      showNext();
-    }
+    if (!lightbox || lightbox.classList.contains('hidden')) return;
+    if (event.key === 'Escape') closeLightbox();
+    if (event.key === 'ArrowLeft') showPrev();
+    if (event.key === 'ArrowRight') showNext();
   });
 </script>

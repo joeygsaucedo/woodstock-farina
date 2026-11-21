@@ -1,5 +1,26 @@
 # Image Guide for Woodstock Farina Website
 
+## Gallery Page: Managed in Google Photos
+
+The photos on `/gallery` come straight from five shared Google Photos albums. No code changes are needed.
+
+- **To add a photo:** add it to the matching album in Google Photos.
+- **To remove a photo:** remove it from the album. Removing it from the album is enough; you don't need to delete it from your library.
+- Changes show on the site within about an hour.
+- Keep each album's link sharing turned on. If sharing is turned off, that category falls back to a few built-in photos.
+
+| Site category | Album |
+|---|---|
+| Weddings | Wedding Catering |
+| Corporate & Festivals | Corporate & Festivals catering |
+| Celebrations | Special Occasion catering |
+| Backyard Gatherings | Backyard small event catering |
+| Beyond Pizza | Other than pizza catering |
+
+To add or rename a category, edit `GALLERY_CATEGORIES` in `src/lib/googlePhotos.ts`.
+
+The rest of this guide covers the other pages' images, which are still stored in `public/images/`.
+
 ## Where to Download Images
 
 1. **Original Squarespace Site**: Save images directly from your current site
